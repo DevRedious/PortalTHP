@@ -15,6 +15,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.ipfs.dweb.link',
       },
+      {
+        protocol: 'https',
+        hostname: 'gateway.pinata.cloud',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ipfs.io',
+      },
     ],
   },
 };
