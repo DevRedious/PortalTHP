@@ -34,7 +34,7 @@ export default function RootLayout({
           glitchColors={['#404040', '#505050', '#606060', '#707070']}
           glitchSpeed={80}
           centerVignette={false}
-          outerVignette={true}
+          outerVignette={false}
           smooth={true}
           characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$&*()-_+=/[]{};:<>.,0123456789"
         />
