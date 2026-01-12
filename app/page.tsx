@@ -14,9 +14,16 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* WCAG AAA: Skip link pour navigation clavier */}
+      <a href="#main-content" className="skip-link">
+        Aller au contenu principal
+      </a>
       <div className="container mx-auto px-4 py-16">
         {/* Header */}
-        <header className="flex justify-between items-center mb-12 border-b border-border/30 pb-3">
+        <header 
+          role="banner"
+          className="flex justify-between items-center mb-12 border-b border-border/30 pb-3"
+        >
           <h1 className="text-xl font-light text-foreground tracking-tight">{t.home.title}</h1>
           <div className="flex items-center gap-2">
             <LanguageSelector />
@@ -25,7 +32,7 @@ export default function Home() {
         </header>
 
         {/* Hero Section */}
-        <div className="text-center mb-20">
+        <section id="main-content" aria-label="Contenu principal" className="text-center mb-20">
           <h2 className="text-3xl font-light mb-3 text-foreground tracking-tight max-w-2xl mx-auto">
             {t.home.subtitle}
           </h2>
@@ -41,10 +48,10 @@ export default function Home() {
               </Button>
             </Link>
           </div>
-        </div>
+        </section>
 
         {/* Features */}
-        <div className="grid md:grid-cols-3 gap-4 mb-16">
+        <section aria-label="Fonctionnalités" className="grid md:grid-cols-3 gap-4 mb-16">
           <Card className="bg-card border-border/30">
             <CardHeader className="p-4">
               <Wallet className="h-5 w-5 mb-2 text-muted-foreground/60" />
@@ -74,10 +81,11 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
           </Card>
-        </div>
+        </section>
 
         {/* CTA */}
-        <Card className="max-w-xl mx-auto bg-card border-border/30">
+        <section aria-label="Appel à l'action">
+          <Card className="max-w-xl mx-auto bg-card border-border/30">
           <CardHeader className="p-4">
             <CardTitle className="text-sm font-normal text-foreground mb-1">{t.home.readyToStart}</CardTitle>
             <CardDescription className="text-xs text-muted-foreground">
@@ -93,6 +101,7 @@ export default function Home() {
             </Link>
           </CardContent>
         </Card>
+        </section>
       </div>
     </div>
   );

@@ -80,8 +80,14 @@ export default function DirectoryPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <a href="#main-content" className="skip-link">
+        Aller au contenu principal
+      </a>
       <div className="container mx-auto px-4 py-8">
-        <header className="flex justify-between items-center mb-6 border-b border-border/30 pb-3">
+        <header 
+          role="banner"
+          className="flex justify-between items-center mb-6 border-b border-border/30 pb-3"
+        >
           <div>
             <h1 className="text-lg font-light mb-1 text-foreground tracking-tight">Annuaire</h1>
             <p className="text-xs text-muted-foreground">
@@ -92,36 +98,43 @@ export default function DirectoryPage() {
         </header>
 
         <div className="mb-4">
+          <label htmlFor="search-input" className="sr-only">
+            Rechercher dans l&apos;annuaire
+          </label>
           <div className="relative max-w-sm">
-            <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground/60" />
+            <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground/60" aria-hidden="true" />
             <Input
+              id="search-input"
               placeholder="Rechercher..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Rechercher dans l'annuaire par nom, département ou technologie"
               className="pl-8 h-7 text-xs"
             />
           </div>
         </div>
 
-        {loading ? (
-          <div 
-            className="text-center py-12"
-            aria-busy="true"
-            aria-live="polite"
-          >
-            <p className="text-muted-foreground">Chargement des profils...</p>
-          </div>
-        ) : filteredProfiles.length === 0 ? (
-          <div className="text-center py-12">
-            <User className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-muted-foreground">
-              {searchQuery
-                ? "Aucun profil ne correspond à votre recherche"
-                : "Aucun profil disponible pour le moment"}
-            </p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <main id="main-content" role="main" aria-label="Liste des profils">
+          {loading ? (
+            <div 
+              className="text-center py-12"
+              aria-busy="true"
+              aria-live="polite"
+              role="status"
+            >
+              <p className="text-muted-foreground">Chargement des profils...</p>
+            </div>
+          ) : filteredProfiles.length === 0 ? (
+            <div className="text-center py-12" role="status">
+              <User className="h-12 w-12 mx-auto mb-4 text-muted-foreground" aria-hidden="true" />
+              <p className="text-muted-foreground">
+                {searchQuery
+                  ? "Aucun profil ne correspond à votre recherche"
+                  : "Aucun profil disponible pour le moment"}
+              </p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label={`${filteredProfiles.length} profil${filteredProfiles.length > 1 ? 's' : ''} trouvé${filteredProfiles.length > 1 ? 's' : ''}`}>
             {filteredProfiles.map(({ address, profile }) => {
               if (!profile) return null;
 
@@ -130,8 +143,9 @@ export default function DirectoryPage() {
                 : null;
 
               return (
-                <Link key={address} href={`/u/${address}`}>
-                  <Card className="bg-card border-border/30 hover:border-border/50 transition-all cursor-pointer">
+                <article key={address} role="listitem">
+                  <Link href={`/u/${address}`} className="block">
+                    <Card className="bg-card border-border/30 hover:border-border/50 transition-all cursor-pointer" aria-label={`Profil de ${profile.firstName} ${profile.lastName}, ${profile.department}`}>
                     <CardHeader className="p-4">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10 border border-border/30">
@@ -173,11 +187,13 @@ export default function DirectoryPage() {
                       </p>
                     </CardContent>
                   </Card>
-                </Link>
+                  </Link>
+                </article>
               );
             })}
-          </div>
-        )}
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );

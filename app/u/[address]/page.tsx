@@ -75,8 +75,14 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <a href="#main-content" className="skip-link">
+        Aller au contenu principal
+      </a>
       <div className="container mx-auto px-4 py-8">
-        <header className="flex justify-between items-center mb-6 border-b border-border/30 pb-3">
+        <header 
+          role="banner"
+          className="flex justify-between items-center mb-6 border-b border-border/30 pb-3"
+        >
           <Link
             href="/directory"
             className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center"
@@ -87,11 +93,17 @@ export default function ProfilePage() {
           <ConnectButton />
         </header>
 
-        {loading ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Chargement du profil...</p>
-          </div>
-        ) : !profile ? (
+        <main id="main-content" role="main" aria-label="Profil utilisateur">
+          {loading ? (
+            <div 
+              className="text-center py-12"
+              aria-busy="true"
+              aria-live="polite"
+              role="status"
+            >
+              <p className="text-muted-foreground">Chargement du profil...</p>
+            </div>
+          ) : !profile ? (
           <Card className="max-w-2xl mx-auto bg-card border-border">
             <CardHeader>
               <CardTitle className="text-foreground">Profil non trouvé</CardTitle>
@@ -215,7 +227,8 @@ export default function ProfilePage() {
               </div>
             </CardContent>
           </Card>
-        )}
+          )}
+        </main>
       </div>
     </div>
   );

@@ -105,8 +105,14 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <a href="#main-content" className="skip-link">
+        Aller au contenu principal
+      </a>
       <div className="container mx-auto px-4 py-8">
-        <header className="flex justify-between items-center mb-6 border-b border-border/30 pb-3">
+        <header 
+          role="banner"
+          className="flex justify-between items-center mb-6 border-b border-border/30 pb-3"
+        >
           <div>
             <Link href="/" className="text-xs text-muted-foreground hover:text-foreground mb-1 inline-flex items-center">
               <ArrowLeft className="h-3 w-3 mr-1.5" />

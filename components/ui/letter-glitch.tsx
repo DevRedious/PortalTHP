@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from 'react';
+import { prefersReducedMotion } from '@/lib/accessibility';
 
 const LetterGlitch = ({
   glitchColors = ['#2b4539', '#61dca3', '#61b3dc'],
@@ -181,6 +182,11 @@ const LetterGlitch = ({
   };
 
   const animate = () => {
+    // WCAG AAA: Respecter prefers-reduced-motion
+    if (prefersReducedMotion()) {
+      return;
+    }
+
     const now = Date.now();
     if (now - lastGlitchTime.current >= glitchSpeed) {
       updateLetters();

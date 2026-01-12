@@ -107,10 +107,23 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
           <Input
             id="firstName"
             {...register("firstName")}
+            aria-required="true"
+            aria-invalid={errors.firstName ? "true" : "false"}
+            aria-describedby={errors.firstName ? "firstName-error" : "firstName-help"}
             className={`h-7 text-xs ${errors.firstName ? "border-destructive" : ""}`}
           />
+          {!errors.firstName && (
+            <p id="firstName-help" className="text-xs text-muted-foreground mt-1">
+              Votre prénom tel qu&apos;il apparaîtra dans l&apos;annuaire
+            </p>
+          )}
           {errors.firstName && (
-            <p className="text-xs text-destructive mt-1">
+            <p 
+              id="firstName-error"
+              role="alert" 
+              aria-live="polite"
+              className="text-xs text-destructive mt-1"
+            >
               {errors.firstName.message}
             </p>
           )}
@@ -121,10 +134,23 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
           <Input
             id="lastName"
             {...register("lastName")}
+            aria-required="true"
+            aria-invalid={errors.lastName ? "true" : "false"}
+            aria-describedby={errors.lastName ? "lastName-error" : "lastName-help"}
             className={`h-7 text-xs ${errors.lastName ? "border-destructive" : ""}`}
           />
+          {!errors.lastName && (
+            <p id="lastName-help" className="text-xs text-muted-foreground mt-1">
+              Votre nom tel qu&apos;il apparaîtra dans l&apos;annuaire
+            </p>
+          )}
           {errors.lastName && (
-            <p className="text-xs text-destructive mt-1">
+            <p 
+              id="lastName-error"
+              role="alert" 
+              aria-live="polite"
+              className="text-xs text-destructive mt-1"
+            >
               {errors.lastName.message}
             </p>
           )}
@@ -147,10 +173,23 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
           <Input
             id="department"
             {...register("department")}
+            aria-required="true"
+            aria-invalid={errors.department ? "true" : "false"}
+            aria-describedby={errors.department ? "department-error" : "department-help"}
             className={`h-7 text-xs ${errors.department ? "border-destructive" : ""}`}
           />
+          {!errors.department && (
+            <p id="department-help" className="text-xs text-muted-foreground mt-1">
+              Exemple : Paris, Lyon, Marseille...
+            </p>
+          )}
           {errors.department && (
-            <p className="text-xs text-destructive mt-1">
+            <p 
+              id="department-error"
+              role="alert" 
+              aria-live="polite"
+              className="text-xs text-destructive mt-1"
+            >
               {errors.department.message}
             </p>
           )}
@@ -166,7 +205,11 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
           className={`text-xs min-h-[60px] ${errors.bio ? "border-destructive" : ""}`}
         />
         {errors.bio && (
-          <p className="text-xs text-destructive mt-1">
+          <p 
+            role="alert" 
+            aria-live="polite"
+            className="text-xs text-destructive mt-1"
+          >
             {errors.bio.message}
           </p>
         )}
