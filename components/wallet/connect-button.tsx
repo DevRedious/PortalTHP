@@ -26,22 +26,23 @@ export function ConnectButton() {
   }
 
   // Filtrer les connecteurs pour éviter les doublons (priorité à MetaMask)
-  const uniqueConnectors = connectors.reduce((acc, connector) => {
+  const seenNames = new Set<string>();
+  const uniqueConnectors = connectors.filter((connector) => {
     // Si MetaMask existe déjà, ignorer les autres instances
     if (connector.name === "MetaMask") {
-      const hasMetaMask = acc.some((c) => c.name === "MetaMask");
-      if (!hasMetaMask) {
-        acc.push(connector);
+      if (seenNames.has("MetaMask")) {
+        return false;
       }
-    } else {
-      // Pour les autres connecteurs, vérifier les doublons par nom
-      const exists = acc.some((c) => c.name === connector.name);
-      if (!exists) {
-        acc.push(connector);
-      }
+      seenNames.add("MetaMask");
+      return true;
     }
-    return acc;
-  }, [] as typeof connectors);
+    // Pour les autres connecteurs, vérifier les doublons par nom
+    if (seenNames.has(connector.name)) {
+      return false;
+    }
+    seenNames.add(connector.name);
+    return true;
+  });
 
   return (
     <div className="flex gap-1.5">

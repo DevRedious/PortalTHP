@@ -2,6 +2,7 @@
 
 import { useAccount } from "wagmi";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ConnectButton } from "@/components/wallet/connect-button";
 import { SiweButton } from "@/components/wallet/siwe-button";
 import { ProfileForm } from "@/components/profile/profile-form";
@@ -128,7 +129,15 @@ export default function DashboardPage() {
 
         <Card className="bg-card border-border/30">
           <CardHeader className="p-4">
-            <CardTitle className="text-sm font-normal text-foreground mb-1">Informations du profil</CardTitle>
+            <div className="flex items-center justify-between mb-1">
+              <CardTitle className="text-sm font-normal text-foreground">Informations du profil</CardTitle>
+              <Link href="/">
+                <Button variant="outline" size="sm">
+                  <ArrowLeft className="h-3 w-3 mr-1.5" />
+                  Retour
+                </Button>
+              </Link>
+            </div>
             <CardDescription className="text-xs text-muted-foreground">
               Votre profil est stocké sur IPFS et lié à votre adresse Ethereum
             </CardDescription>
