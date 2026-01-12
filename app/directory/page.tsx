@@ -104,7 +104,11 @@ export default function DirectoryPage() {
         </div>
 
         {loading ? (
-          <div className="text-center py-12">
+          <div 
+            className="text-center py-12"
+            aria-busy="true"
+            aria-live="polite"
+          >
             <p className="text-muted-foreground">Chargement des profils...</p>
           </div>
         ) : filteredProfiles.length === 0 ? (

@@ -9,6 +9,17 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Portail THP - Annuaire Web3",
   description: "Annuaire décentralisé des développeurs THP",
+  openGraph: {
+    title: "Portail THP - Annuaire Web3",
+    description: "Créez votre profil décentralisé et rejoignez la communauté des développeurs THP",
+    type: "website",
+    locale: "fr_FR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Portail THP - Annuaire Web3",
+    description: "Annuaire décentralisé des développeurs THP",
+  },
 };
 
 export default function RootLayout({
@@ -27,9 +38,9 @@ export default function RootLayout({
           smooth={true}
           characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$&*()-_+=/[]{};:<>.,0123456789"
         />
-        <div className="relative z-10">
+        <main role="main" className="relative z-10">
           <Providers>{children}</Providers>
-        </div>
+        </main>
       </body>
     </html>
   );
