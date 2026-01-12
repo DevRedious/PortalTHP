@@ -61,7 +61,7 @@ export default function DashboardPage() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="max-w-md bg-card border-border">
           <CardHeader>
             <CardTitle className="text-foreground">Connexion requise</CardTitle>
@@ -87,7 +87,7 @@ export default function DashboardPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="max-w-md bg-card border-border">
           <CardHeader>
             <CardTitle className="text-foreground">Authentification requise</CardTitle>
@@ -104,7 +104,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <header className="flex justify-between items-center mb-6 border-b border-border/30 pb-3">
           <div>

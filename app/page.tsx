@@ -13,7 +13,7 @@ export default function Home() {
   const { t } = useI18n();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-16">
         {/* Header */}
         <header className="flex justify-between items-center mb-12 border-b border-border/30 pb-3">
