@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import Image from "next/image";
 import { uploadProfile, uploadAvatar } from "@/lib/ipfs";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { THP_PROFILE_REGISTRY_ABI, getContractAddress } from "@/lib/contract";
@@ -281,11 +282,15 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
           className="h-7 text-xs file:text-xs"
         />
         {avatarPreview && (
-          <img
-            src={avatarPreview}
-            alt="Preview"
-            className="mt-2 w-20 h-20 rounded-full object-cover"
-          />
+          <div className="mt-2 relative w-20 h-20 rounded-full overflow-hidden">
+            <Image
+              src={avatarPreview}
+              alt="Preview"
+              width={80}
+              height={80}
+              className="object-cover"
+            />
+          </div>
         )}
       </div>
 

@@ -25,6 +25,7 @@ export default function RootLayout({
           centerVignette={false}
           outerVignette={true}
           smooth={true}
+          characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$&*()-_+=/[]{};:<>.,0123456789"
         />
         <div className="relative z-10">
           <Providers>{children}</Providers>
