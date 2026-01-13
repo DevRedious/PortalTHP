@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { uploadProfile, uploadAvatar } from "@/lib/ipfs";
 import { 
@@ -64,6 +64,29 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
     hash,
   });
 
+  // Extraction des traductions pour les useEffect (mémorisées pour éviter les re-renders)
+  const errorMessages = useMemo(() => ({
+    unknown: t.form.errors.unknown,
+    transactionRejected: t.form.errors.transactionRejected,
+    transactionCancelled: t.form.errors.transactionCancelled,
+    insufficientFunds: t.form.errors.insufficientFunds,
+    insufficientFundsDescription: t.form.errors.insufficientFundsDescription,
+    networkError: t.form.errors.networkError,
+    networkErrorDescription: t.form.errors.networkErrorDescription,
+    transactionError: t.form.errors.transactionError,
+  }), [t.form.errors]);
+
+  const loadingMessages = useMemo(() => ({
+    transactionPending: t.form.loading.transactionPending,
+    transactionPendingDescription: t.form.loading.transactionPendingDescription,
+    transactionConfirming: t.form.loading.transactionConfirming,
+  }), [t.form.loading]);
+
+  const successMessages = useMemo(() => ({
+    profileSaved: t.form.success.profileSaved,
+    transactionConfirmed: t.form.success.transactionConfirmed,
+  }), [t.form.success]);
+
   // Estimation du gas
   const { data: gasPrice } = useGasPrice();
   const encodedData = pendingData && showConfirmation
@@ -85,54 +108,54 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
   // Notifications pour les transactions
   useEffect(() => {
     if (writeError) {
-      const errorMessage = writeError.message || t.form.errors.unknown;
+      const errorMessage = writeError.message || errorMessages.unknown;
       
       if (errorMessage.includes("user rejected") || errorMessage.includes("User rejected")) {
-        toast.error(t.form.errors.transactionRejected, {
-          description: t.form.errors.transactionCancelled,
+        toast.error(errorMessages.transactionRejected, {
+          description: errorMessages.transactionCancelled,
         });
       } else if (errorMessage.includes("insufficient funds") || errorMessage.includes("insufficient balance")) {
-        toast.error(t.form.errors.insufficientFunds, {
-          description: t.form.errors.insufficientFundsDescription,
+        toast.error(errorMessages.insufficientFunds, {
+          description: errorMessages.insufficientFundsDescription,
         });
       } else if (errorMessage.includes("network") || errorMessage.includes("Network")) {
-        toast.error(t.form.errors.networkError, {
-          description: t.form.errors.networkErrorDescription,
+        toast.error(errorMessages.networkError, {
+          description: errorMessages.networkErrorDescription,
         });
       } else {
-        toast.error(t.form.errors.transactionError, {
+        toast.error(errorMessages.transactionError, {
           description: errorMessage,
         });
       }
       setShowConfirmation(false);
       setUploadProgress({ stage: "idle", progress: 0 });
     }
-  }, [writeError]);
+  }, [writeError, errorMessages]);
 
   useEffect(() => {
     if (isPending) {
-      toast.loading(t.form.loading.transactionPending, {
-        description: t.form.loading.transactionPendingDescription,
+      toast.loading(loadingMessages.transactionPending, {
+        description: loadingMessages.transactionPendingDescription,
         id: "transaction-pending",
       });
       setUploadProgress({ stage: "transaction", progress: 50 });
     }
-  }, [isPending]);
+  }, [isPending, loadingMessages]);
 
   useEffect(() => {
     if (isConfirming) {
-      toast.loading(t.form.loading.transactionConfirming, {
+      toast.loading(loadingMessages.transactionConfirming, {
         description: "En attente de la confirmation sur la blockchain.",
         id: "transaction-confirming",
       });
       setUploadProgress({ stage: "transaction", progress: 75 });
     }
-  }, [isConfirming]);
+  }, [isConfirming, loadingMessages]);
 
   useEffect(() => {
     if (isConfirmed && hash && address) {
-      toast.success(t.form.success.profileSaved, {
-        description: `${t.form.success.transactionConfirmed}: ${hash.slice(0, 10)}...${hash.slice(-8)}`,
+      toast.success(successMessages.profileSaved, {
+        description: `${successMessages.transactionConfirmed}: ${hash.slice(0, 10)}...${hash.slice(-8)}`,
         id: "transaction-success",
       });
       setUploadProgress({ stage: "complete", progress: 100 });
@@ -147,7 +170,7 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
         setUploadProgress({ stage: "idle", progress: 0 });
       }, 2000);
     }
-  }, [isConfirmed, hash, address]);
+  }, [isConfirmed, hash, address, successMessages]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

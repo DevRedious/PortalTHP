@@ -1,97 +1,196 @@
 "use client";
 
-import { useReadContract } from "wagmi";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { ConnectButton } from "@/components/wallet/connect-button";
 import Link from "next/link";
-import { fetchProfile, getIPFSUrl } from "@/lib/ipfs";
-import { useEffect, useState } from "react";
-import type { ProfileIPFS } from "@/lib/schemas";
+import { getIPFSUrl } from "@/lib/ipfs";
 import { truncateAddress } from "@/lib/utils";
-import { Search, User } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { THP_PROFILE_REGISTRY_ABI, getContractAddress } from "@/lib/contract";
+import { User } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { trackSearch } from "@/lib/analytics";
 import { generateDirectorySchema } from "@/lib/seo";
 import { useI18n } from "@/lib/i18n-context";
+import { useProfileRefs, type ProfileWithAddress } from "@/lib/use-profiles";
+import { Filters, type FilterState } from "@/components/directory/filters";
+import { filterAndSortProfiles, extractDepartments, extractStackTags } from "@/lib/profile-filters";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProfile } from "@/lib/ipfs";
 
-interface ProfileWithAddress {
-  address: string;
-  profile: ProfileIPFS | null;
-  updatedAt: number;
+const BATCH_SIZE = 20; // Nombre de profils à charger par batch
+const INITIAL_BATCHES = 2; // Nombre de batches à charger initialement
+
+interface ProfileCardProps {
+  profile: ProfileWithAddress;
+}
+
+function ProfileCard({ profile }: ProfileCardProps) {
+  const { t } = useI18n();
+  
+  if (!profile.profile) return null;
+
+  const avatarUrl = profile.profile.avatarCID
+    ? getIPFSUrl(profile.profile.avatarCID)
+    : null;
+
+  return (
+    <article>
+      <Link href={`/u/${profile.address}`} className="block">
+        <Card className="bg-card border-border/30 hover:border-border/50 transition-all cursor-pointer h-full">
+          <CardHeader className="p-4">
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10 border border-border/30">
+                <AvatarImage src={avatarUrl || undefined} />
+                <AvatarFallback className="bg-secondary/50 text-foreground text-xs">
+                  {profile.profile.firstName[0]}
+                  {profile.profile.lastName[0]}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <CardTitle className="text-sm font-normal text-foreground">
+                  {profile.profile.firstName} {profile.profile.lastName}
+                </CardTitle>
+                <CardDescription className="text-xs text-muted-foreground">
+                  {profile.profile.department}
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="p-4 pt-0">
+            <p className="text-xs text-muted-foreground mb-3 line-clamp-2 leading-relaxed">
+              {profile.profile.bio}
+            </p>
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {profile.profile.stackTags.slice(0, 3).map((tag) => (
+                <span
+                  key={tag}
+                  className="px-1.5 py-0.5 bg-secondary/30 text-secondary-foreground rounded text-xs border border-border/20"
+                >
+                  {tag}
+                </span>
+              ))}
+              {profile.profile.stackTags.length > 3 && (
+                <span className="px-1.5 py-0.5 text-xs text-muted-foreground/60">
+                  +{profile.profile.stackTags.length - 3}
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground/60">
+              {truncateAddress(profile.address)}
+            </p>
+          </CardContent>
+        </Card>
+      </Link>
+    </article>
+  );
 }
 
 export default function DirectoryPage() {
   const { t, locale } = useI18n();
-  const [profiles, setProfiles] = useState<ProfileWithAddress[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  const { data: profilesData } = useReadContract({
-    address: getContractAddress(),
-    abi: THP_PROFILE_REGISTRY_ABI,
-    functionName: "getAllProfiles",
+  const [filters, setFilters] = useState<FilterState>({
+    search: "",
+    department: "",
+    availability: "",
+    stackTag: "",
+    sort: "updated-desc",
   });
 
-  useEffect(() => {
-    async function loadProfiles() {
-      if (!profilesData) {
-        setLoading(false);
-        return;
-      }
+  const [loadedBatches, setLoadedBatches] = useState<number>(INITIAL_BATCHES);
+  const observerTarget = useRef<HTMLDivElement>(null);
 
-      setLoading(true);
-      const loadedProfiles = await Promise.all(
-        profilesData.map(async (profileData: any) => {
-          if (!profileData.isPublic || !profileData.profileURI) {
+  // Charger les références de profils
+  const { data: profileRefs = [], isLoading: refsLoading } = useProfileRefs();
+
+  // Charger les profils par batch avec React Query
+  const batchesToLoad = Math.min(loadedBatches, Math.ceil(profileRefs.length / BATCH_SIZE));
+  
+  const batchQueries = useQuery({
+    queryKey: ["profiles-batch", profileRefs, batchesToLoad],
+    queryFn: async () => {
+      const batches = [];
+      for (let i = 0; i < batchesToLoad; i++) {
+        const startIndex = i * BATCH_SIZE;
+        const endIndex = Math.min(startIndex + BATCH_SIZE, profileRefs.length);
+        const batch = profileRefs.slice(startIndex, endIndex);
+
+        const profilesPromises = batch.map(async (ref) => {
+          try {
+            const profile = await fetchProfile(ref.profileURI);
+            return {
+              address: ref.address,
+              profile,
+              updatedAt: ref.updatedAt,
+              profileURI: ref.profileURI,
+            } as ProfileWithAddress;
+          } catch {
             return null;
           }
+        });
 
-          const profile = await fetchProfile(profileData.profileURI);
-          return {
-            address: profileData.owner,
-            profile,
-            updatedAt: Number(profileData.updatedAt),
-          };
-        })
-      );
-
-      setProfiles(
-        loadedProfiles.filter(
+        const profiles = (await Promise.all(profilesPromises)).filter(
           (p): p is ProfileWithAddress => p !== null && p.profile !== null
-        )
-      );
-      setLoading(false);
+        );
+        batches.push(...profiles);
+      }
+      return batches;
+    },
+    enabled: profileRefs.length > 0 && !refsLoading,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+
+  const loadedProfiles = batchQueries.data || [];
+
+  // Filtrer et trier les profils
+  const filteredProfiles = useMemo(() => {
+    return filterAndSortProfiles(loadedProfiles, filters);
+  }, [loadedProfiles, filters]);
+
+  // Extraire les départements et tags disponibles
+  const availableDepartments = useMemo(
+    () => extractDepartments(loadedProfiles),
+    [loadedProfiles]
+  );
+  const availableStackTags = useMemo(
+    () => extractStackTags(loadedProfiles),
+    [loadedProfiles]
+  );
+
+  // Observer pour charger plus de profils au scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !batchQueries.isLoading) {
+          const totalBatches = Math.ceil(profileRefs.length / BATCH_SIZE);
+          if (loadedBatches < totalBatches) {
+            setLoadedBatches((prev) => Math.min(prev + 1, totalBatches));
+          }
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
     }
 
-    loadProfiles();
-  }, [profilesData]);
-
-  const filteredProfiles = profiles.filter((p) => {
-    if (!searchQuery) return true;
-    const query = searchQuery.toLowerCase();
-    const profile = p.profile;
-    if (!profile) return false;
-    return (
-      profile.firstName.toLowerCase().includes(query) ||
-      profile.lastName.toLowerCase().includes(query) ||
-      profile.department.toLowerCase().includes(query) ||
-      profile.stackTags.some((tag) => tag.toLowerCase().includes(query))
-    );
-  });
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [batchQueries.isLoading, profileRefs.length, loadedBatches]);
 
   // Track les recherches
   useEffect(() => {
-    if (searchQuery && !loading) {
-      trackSearch(searchQuery, filteredProfiles.length);
+    if (filters.search && !refsLoading) {
+      trackSearch(filters.search, filteredProfiles.length);
     }
-  }, [searchQuery, filteredProfiles.length, loading]);
+  }, [filters.search, filteredProfiles.length, refsLoading]);
 
   // Générer le Schema.org JSON-LD
-  const schemaJson = generateDirectorySchema(profiles.length);
+  const schemaJson = generateDirectorySchema(filteredProfiles.length);
 
   return (
     <div className="min-h-screen bg-background">
@@ -103,39 +202,29 @@ export default function DirectoryPage() {
         {t.common.skipToContent}
       </a>
       <div className="container mx-auto px-4 py-8">
-        <header 
+        <header
           role="banner"
           className="flex justify-between items-center mb-6 border-b border-border/30 pb-3"
         >
           <div>
-            <h1 className="text-lg font-light mb-1 text-foreground tracking-tight">{t.directory.title}</h1>
-            <p className="text-xs text-muted-foreground">
-              {t.directory.subtitle}
-            </p>
+            <h1 className="text-lg font-light mb-1 text-foreground tracking-tight">
+              {t.directory.title}
+            </h1>
+            <p className="text-xs text-muted-foreground">{t.directory.subtitle}</p>
           </div>
           <ConnectButton />
         </header>
 
-        <div className="mb-4">
-          <label htmlFor="search-input" className="sr-only">
-            {t.directory.searchLabel}
-          </label>
-          <div className="relative max-w-sm">
-            <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground/60" aria-hidden="true" />
-            <Input
-              id="search-input"
-              placeholder={t.common.search}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label={t.directory.searchAriaLabel}
-              className="pl-8 h-7 text-xs"
-            />
-          </div>
-        </div>
+        <Filters
+          filters={filters}
+          onFiltersChange={setFilters}
+          availableDepartments={availableDepartments}
+          availableStackTags={availableStackTags}
+        />
 
         <main id="main-content" role="main" aria-label="Liste des profils">
-          {loading ? (
-            <div 
+          {refsLoading || batchQueries.isLoading ? (
+            <div
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
               aria-busy="true"
               aria-live="polite"
@@ -170,70 +259,41 @@ export default function DirectoryPage() {
             <div className="text-center py-12" role="status">
               <User className="h-12 w-12 mx-auto mb-4 text-muted-foreground" aria-hidden="true" />
               <p className="text-muted-foreground">
-                {searchQuery
+                {filters.search || filters.department || filters.availability || filters.stackTag
                   ? t.directory.noResults
                   : t.directory.noProfiles}
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label={`${filteredProfiles.length} ${filteredProfiles.length > 1 ? t.directory.profilesFoundPlural : t.directory.profilesFound}`}>
-            {filteredProfiles.map(({ address, profile }) => {
-              if (!profile) return null;
-
-              const avatarUrl = profile.avatarCID
-                ? getIPFSUrl(profile.avatarCID)
-                : null;
-
-              return (
-                <article key={address} role="listitem">
-                  <Link href={`/u/${address}`} className="block">
-                    <Card className="bg-card border-border/30 hover:border-border/50 transition-all cursor-pointer" aria-label={`Profil de ${profile.firstName} ${profile.lastName}, ${profile.department}`}>
-                    <CardHeader className="p-4">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10 border border-border/30">
-                          <AvatarImage src={avatarUrl || undefined} />
-                          <AvatarFallback className="bg-secondary/50 text-foreground text-xs">
-                            {profile.firstName[0]}
-                            {profile.lastName[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <CardTitle className="text-sm font-normal text-foreground">
-                            {profile.firstName} {profile.lastName}
-                          </CardTitle>
-                          <CardDescription className="text-xs text-muted-foreground">{profile.department}</CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0">
-                      <p className="text-xs text-muted-foreground mb-3 line-clamp-2 leading-relaxed">
-                        {profile.bio}
-                      </p>
-                      <div className="flex flex-wrap gap-1.5 mb-3">
-                        {profile.stackTags.slice(0, 3).map((tag) => (
-                          <span
-                            key={tag}
-                            className="px-1.5 py-0.5 bg-secondary/30 text-secondary-foreground rounded text-xs border border-border/20"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                        {profile.stackTags.length > 3 && (
-                          <span className="px-1.5 py-0.5 text-xs text-muted-foreground/60">
-                            +{profile.stackTags.length - 3}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground/60">
-                        {truncateAddress(address)}
-                      </p>
-                    </CardContent>
-                  </Card>
-                  </Link>
-                </article>
-              );
-            })}
-            </div>
+            <>
+              <div className="mb-4 text-xs text-muted-foreground">
+                {filteredProfiles.length}{" "}
+                {filteredProfiles.length > 1
+                  ? t.directory.profilesFoundPlural
+                  : t.directory.profilesFound}
+              </div>
+              <div
+                className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+                role="list"
+                aria-label={`${filteredProfiles.length} ${filteredProfiles.length > 1 ? t.directory.profilesFoundPlural : t.directory.profilesFound}`}
+              >
+                {filteredProfiles.map((profile) => (
+                  <div key={profile.address} role="listitem">
+                    <ProfileCard profile={profile} />
+                  </div>
+                ))}
+              </div>
+              {/* Observer target pour charger plus de profils */}
+              {loadedBatches * BATCH_SIZE < profileRefs.length && (
+                <div ref={observerTarget} className="h-20 flex items-center justify-center">
+                  {batchQueries.isLoading && (
+                    <div className="text-xs text-muted-foreground">
+                      {t.directory.loading || t.common.loading}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
           )}
         </main>
       </div>
