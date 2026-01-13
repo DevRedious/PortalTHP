@@ -6,6 +6,7 @@ import { truncateAddress } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n-context";
 import { LogOut } from "lucide-react";
 import { MetaMaskLogo } from "@/components/ui/metamask-logo";
+import { trackWalletConnect } from "@/lib/analytics";
 
 export function ConnectButton() {
   const { address, isConnected } = useAccount();
@@ -49,7 +50,10 @@ export function ConnectButton() {
       {uniqueConnectors.map((connector) => (
         <Button
           key={connector.uid}
-          onClick={() => connect({ connector })}
+          onClick={() => {
+            connect({ connector });
+            trackWalletConnect(connector.name);
+          }}
           disabled={isPending}
           size="sm"
         >

@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import LetterGlitch from "@/components/ui/letter-glitch";
+import { AnalyticsScript } from "@/components/analytics/analytics-script";
+import { ServiceWorkerScript } from "@/components/service-worker/service-worker-script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +31,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" suppressHydrationWarning className="dark">
+      <head>
+        <AnalyticsScript />
+        <ServiceWorkerScript />
+      </head>
       <body className={inter.className}>
         <LetterGlitch
           glitchColors={['#404040', '#505050', '#606060', '#707070']}

@@ -6,6 +6,7 @@ import { createSiweMessage } from "@/lib/siwe";
 import { useI18n } from "@/lib/i18n-context";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { trackSiweAuth } from "@/lib/analytics";
 
 export function SiweButton() {
   const { address, isConnected } = useAccount();
@@ -50,6 +51,12 @@ export function SiweButton() {
       }));
 
       setIsAuthenticated(true);
+      
+      // Track l'authentification SIWE
+      if (address) {
+        trackSiweAuth(address);
+      }
+      
       router.push("/dashboard");
     } catch (error) {
       console.error("Erreur lors de la signature:", error);

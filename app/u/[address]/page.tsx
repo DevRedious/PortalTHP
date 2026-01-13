@@ -14,6 +14,8 @@ import { ArrowLeft, ExternalLink, Github, Linkedin, MessageCircle } from "lucide
 import Link from "next/link";
 import { isAddress } from "viem";
 import { THP_PROFILE_REGISTRY_ABI, getContractAddress } from "@/lib/contract";
+import { generateProfileSchema } from "@/lib/seo";
+import { trackProfileView } from "@/lib/analytics";
 
 export default function ProfilePage() {
   const params = useParams();
@@ -44,6 +46,11 @@ export default function ProfilePage() {
       const fetchedProfile = await fetchProfile(profileData.profileURI);
       setProfile(fetchedProfile);
       setLoading(false);
+
+      // Track la visualisation du profil
+      if (fetchedProfile) {
+        trackProfileView(address);
+      }
     }
 
     loadProfile();
@@ -73,8 +80,19 @@ export default function ProfilePage() {
     ? getIPFSUrl(profile.avatarCID)
     : null;
 
+  // Générer le Schema.org JSON-LD
+  const schemaJson = profile
+    ? generateProfileSchema(profile, address)
+    : null;
+
   return (
     <div className="min-h-screen bg-background">
+      {schemaJson && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
+        />
+      )}
       <a href="#main-content" className="skip-link">
         Aller au contenu principal
       </a>

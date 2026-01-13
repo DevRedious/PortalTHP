@@ -13,6 +13,9 @@ import { truncateAddress } from "@/lib/utils";
 import { Search, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { THP_PROFILE_REGISTRY_ABI, getContractAddress } from "@/lib/contract";
+import { Skeleton } from "@/components/ui/skeleton";
+import { trackSearch } from "@/lib/analytics";
+import { generateDirectorySchema } from "@/lib/seo";
 
 interface ProfileWithAddress {
   address: string;
@@ -78,8 +81,22 @@ export default function DirectoryPage() {
     );
   });
 
+  // Track les recherches
+  useEffect(() => {
+    if (searchQuery && !loading) {
+      trackSearch(searchQuery, filteredProfiles.length);
+    }
+  }, [searchQuery, filteredProfiles.length, loading]);
+
+  // Générer le Schema.org JSON-LD
+  const schemaJson = generateDirectorySchema(profiles.length);
+
   return (
     <div className="min-h-screen bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
+      />
       <a href="#main-content" className="skip-link">
         Aller au contenu principal
       </a>
@@ -117,12 +134,35 @@ export default function DirectoryPage() {
         <main id="main-content" role="main" aria-label="Liste des profils">
           {loading ? (
             <div 
-              className="text-center py-12"
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
               aria-busy="true"
               aria-live="polite"
               role="status"
+              aria-label="Chargement des profils"
             >
-              <p className="text-muted-foreground">Chargement des profils...</p>
+              {[...Array(6)].map((_, i) => (
+                <Card key={i} className="bg-card border-border/30">
+                  <CardHeader className="p-4">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="h-10 w-10 rounded-full" />
+                      <div className="flex-1 space-y-2">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-3 w-16" />
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-4 pt-0 space-y-3">
+                    <Skeleton className="h-3 w-full" />
+                    <Skeleton className="h-3 w-3/4" />
+                    <div className="flex gap-1.5">
+                      <Skeleton className="h-5 w-16 rounded" />
+                      <Skeleton className="h-5 w-20 rounded" />
+                      <Skeleton className="h-5 w-14 rounded" />
+                    </div>
+                    <Skeleton className="h-3 w-32" />
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           ) : filteredProfiles.length === 0 ? (
             <div className="text-center py-12" role="status">
