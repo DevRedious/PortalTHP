@@ -1,8 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  webpack: (config) => {
-    config.resolve.fallback = { fs: false, net: false, tls: false };
+  webpack: (config, { isServer }) => {
+    // Fallbacks pour les modules Node.js non disponibles dans le navigateur
+    config.resolve.fallback = { 
+      fs: false, 
+      net: false, 
+      tls: false,
+    };
+
+    // Ignorer les modules optionnels React Native qui ne sont pas nécessaires en web
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      '@react-native-async-storage/async-storage': false,
+      'pino-pretty': false,
+    };
+
     return config;
   },
   images: {

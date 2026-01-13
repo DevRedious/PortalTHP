@@ -10,18 +10,20 @@ import { fetchProfile, getIPFSUrl } from "@/lib/ipfs";
 import { useEffect, useState } from "react";
 import type { ProfileIPFS } from "@/lib/schemas";
 import { truncateAddress, formatDate } from "@/lib/utils";
-import { ArrowLeft, ExternalLink, Github, Linkedin, MessageCircle } from "lucide-react";
+import { ArrowLeft, ExternalLink, Github, Linkedin, MessageCircle, Copy, Check } from "lucide-react";
 import Link from "next/link";
 import { isAddress } from "viem";
 import { THP_PROFILE_REGISTRY_ABI, getContractAddress } from "@/lib/contract";
 import { generateProfileSchema } from "@/lib/seo";
 import { trackProfileView } from "@/lib/analytics";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
   const params = useParams();
   const address = params.address as string;
   const [profile, setProfile] = useState<ProfileIPFS | null>(null);
   const [loading, setLoading] = useState(true);
+  const [discordCopied, setDiscordCopied] = useState(false);
 
   const isValidAddress = isAddress(address);
 
@@ -183,9 +185,37 @@ export default function ProfilePage() {
                       </Button>
                     )}
                     {profile.discord && (
-                      <Button variant="outline" size="sm">
-                        <MessageCircle className="h-3 w-3 mr-1" />
-                        {profile.discord}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={async () => {
+                          if (!profile.discord) return;
+                          try {
+                            await navigator.clipboard.writeText(profile.discord);
+                            setDiscordCopied(true);
+                            toast.success("Discord copié !", {
+                              description: `${profile.discord} a été copié dans le presse-papier`,
+                            });
+                            setTimeout(() => setDiscordCopied(false), 2000);
+                          } catch (error) {
+                            toast.error("Erreur", {
+                              description: "Impossible de copier le texte Discord",
+                            });
+                          }
+                        }}
+                        aria-label={`Copier ${profile.discord} dans le presse-papier`}
+                      >
+                        {discordCopied ? (
+                          <>
+                            <Check className="h-3 w-3 mr-1" />
+                            Copié !
+                          </>
+                        ) : (
+                          <>
+                            <MessageCircle className="h-3 w-3 mr-1" />
+                            {profile.discord}
+                          </>
+                        )}
                       </Button>
                     )}
                   </div>
