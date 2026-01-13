@@ -8,6 +8,7 @@ Index alphabétique de tous les documents de la documentation.
 |----------|-------------|-----------|
 | [**API.md**](./API.md) | Documentation API et smart contracts | Référence |
 | [**ARCHITECTURE.md**](./ARCHITECTURE.md) | Architecture système et flux de données | Architecture |
+| [**BRAVE_BROWSER_FIX.md**](./BRAVE_BROWSER_FIX.md) | Correction duplication boutons dans Brave | Développement |
 | [**COMMANDES_GITHUB.md**](./COMMANDES_GITHUB.md) | Commandes Git pour pousser sur GitHub | Projet |
 | [**COMPOSANTS.md**](./COMPOSANTS.md) | Documentation des composants UI | Développement |
 | [**CONFIGURATION.md**](./CONFIGURATION.md) | Configuration complète de l'application | Configuration |
@@ -35,6 +36,7 @@ Index alphabétique de tous les documents de la documentation.
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - Architecture système
 - [DEVELOPPEMENT.md](./DEVELOPPEMENT.md) - Guide de développement
 - [COMPOSANTS.md](./COMPOSANTS.md) - Documentation composants
+- [BRAVE_BROWSER_FIX.md](./BRAVE_BROWSER_FIX.md) - Correction duplication boutons Brave
 
 ### 🔧 Référence
 - [API.md](./API.md) - API et smart contracts
