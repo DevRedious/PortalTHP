@@ -140,7 +140,10 @@ export default function DirectoryPage() {
     gcTime: 10 * 60 * 1000,
   });
 
-  const loadedProfiles = batchQueries.data || [];
+  // Mémoriser loadedProfiles pour éviter les nouvelles références à chaque rendu
+  const loadedProfiles = useMemo(() => {
+    return batchQueries.data || [];
+  }, [batchQueries.data]);
 
   // Filtrer et trier les profils
   const filteredProfiles = useMemo(() => {
@@ -159,6 +162,9 @@ export default function DirectoryPage() {
 
   // Observer pour charger plus de profils au scroll
   useEffect(() => {
+    const currentTarget = observerTarget.current;
+    if (!currentTarget) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !batchQueries.isLoading) {
@@ -171,14 +177,10 @@ export default function DirectoryPage() {
       { threshold: 0.1 }
     );
 
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
+    observer.observe(currentTarget);
 
     return () => {
-      if (observerTarget.current) {
-        observer.unobserve(observerTarget.current);
-      }
+      observer.unobserve(currentTarget);
     };
   }, [batchQueries.isLoading, profileRefs.length, loadedBatches]);
 

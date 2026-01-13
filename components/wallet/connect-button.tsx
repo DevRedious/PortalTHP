@@ -14,20 +14,9 @@ export function ConnectButton() {
   const { disconnect } = useDisconnect();
   const { t } = useI18n();
 
-  if (isConnected && address) {
-    return (
-      <div className="flex items-center gap-1.5">
-        <span className="text-xs text-muted-foreground">{truncateAddress(address)}</span>
-        <Button variant="ghost" size="sm" onClick={() => disconnect()}>
-          <LogOut className="h-3 w-3 mr-1" />
-          {t.common.disconnect}
-        </Button>
-      </div>
-    );
-  }
-
   // Filtrer les connecteurs pour éviter les doublons
   // Utiliser useMemo pour éviter les recalculs et garantir la stabilité
+  // IMPORTANT: Les hooks doivent être appelés avant tout return conditionnel
   const uniqueConnectors = useMemo(() => {
     const seenUids = new Set<string>();
     const seenNames = new Set<string>();
@@ -66,14 +55,27 @@ export function ConnectButton() {
     });
   }, [connectors]);
 
+  // Prendre seulement le premier connecteur pour éviter les doublons dans Brave
+  // Si plusieurs connecteurs uniques sont détectés, on prend le premier
+  const connectorToUse = uniqueConnectors[0];
+
+  // Si connecté, afficher l'adresse et le bouton de déconnexion
+  if (isConnected && address) {
+    return (
+      <div className="flex items-center gap-1.5">
+        <span className="text-xs text-muted-foreground">{truncateAddress(address)}</span>
+        <Button variant="ghost" size="sm" onClick={() => disconnect()}>
+          <LogOut className="h-3 w-3 mr-1" />
+          {t.common.disconnect}
+        </Button>
+      </div>
+    );
+  }
+
   // Si aucun connecteur unique, ne rien afficher
   if (uniqueConnectors.length === 0) {
     return null;
   }
-
-  // Prendre seulement le premier connecteur pour éviter les doublons dans Brave
-  // Si plusieurs connecteurs uniques sont détectés, on prend le premier
-  const connectorToUse = uniqueConnectors[0];
 
   return (
     <Button
