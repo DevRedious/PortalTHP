@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Locale, defaultLocale, translations } from './i18n';
+import { Locale, defaultLocale, translations, locales } from './i18n';
 
 type Translation = typeof translations.fr;
 
@@ -19,7 +19,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Charger la langue depuis localStorage
     const savedLocale = localStorage.getItem('locale') as Locale;
-    if (savedLocale && (savedLocale === 'fr' || savedLocale === 'en')) {
+    if (savedLocale && locales.includes(savedLocale)) {
       setLocaleState(savedLocale);
     }
   }, []);

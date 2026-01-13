@@ -5,6 +5,7 @@ import { Providers } from "@/components/providers";
 import LetterGlitch from "@/components/ui/letter-glitch";
 import { AnalyticsScript } from "@/components/analytics/analytics-script";
 import { ServiceWorkerScript } from "@/components/service-worker/service-worker-script";
+import { Footer } from "@/components/layout/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,8 +45,13 @@ export default function RootLayout({
           smooth={true}
           characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$&*()-_+=/[]{};:<>.,0123456789"
         />
-        <main role="main" className="relative z-10">
-          <Providers>{children}</Providers>
+        <main role="main" className="relative z-10 flex flex-col min-h-screen">
+          <Providers>
+            <div className="flex-1">
+              {children}
+            </div>
+            <Footer />
+          </Providers>
         </main>
       </body>
     </html>

@@ -12,10 +12,12 @@ import { useEffect, useState } from "react";
 import type { Profile } from "@/lib/schemas";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 import { THP_PROFILE_REGISTRY_ABI, getContractAddress } from "@/lib/contract";
+import { useI18n } from "@/lib/i18n-context";
 
 export default function DashboardPage() {
+  const { t } = useI18n();
   const { address, isConnected } = useAccount();
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -63,13 +65,22 @@ export default function DashboardPage() {
   if (!isConnected) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="max-w-md bg-card border-border">
-          <CardHeader>
-            <CardTitle className="text-foreground">Connexion requise</CardTitle>
+        <Card className="max-w-md bg-card border-border relative">
+          <CardHeader className="pr-10">
+            <CardTitle className="text-foreground">{t.dashboard.connectionRequired}</CardTitle>
             <CardDescription className="text-muted-foreground">
-              Veuillez connecter votre wallet pour accéder au dashboard
+              {t.dashboard.connectionRequiredDescription}
             </CardDescription>
           </CardHeader>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-3 right-3 h-6 w-6 p-0"
+            onClick={() => router.push("/")}
+            aria-label={t.common.cancel}
+          >
+            <X className="h-4 w-4" />
+          </Button>
           <CardContent>
             <ConnectButton />
           </CardContent>
@@ -89,13 +100,22 @@ export default function DashboardPage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="max-w-md bg-card border-border">
-          <CardHeader>
-            <CardTitle className="text-foreground">Authentification requise</CardTitle>
+        <Card className="max-w-md bg-card border-border relative">
+          <CardHeader className="pr-10">
+            <CardTitle className="text-foreground">{t.dashboard.authRequired}</CardTitle>
             <CardDescription className="text-muted-foreground">
-              Veuillez vous authentifier avec SIWE pour accéder au dashboard
+              {t.dashboard.authRequiredDescription}
             </CardDescription>
           </CardHeader>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-3 right-3 h-6 w-6 p-0"
+            onClick={() => router.push("/")}
+            aria-label={t.common.cancel}
+          >
+            <X className="h-4 w-4" />
+          </Button>
           <CardContent>
             <SiweButton />
           </CardContent>
@@ -107,7 +127,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-background">
       <a href="#main-content" className="skip-link">
-        Aller au contenu principal
+        {t.common.skipToContent}
       </a>
       <div className="container mx-auto px-4 py-8">
         <header 
@@ -117,11 +137,11 @@ export default function DashboardPage() {
           <div>
             <Link href="/" className="text-xs text-muted-foreground hover:text-foreground mb-1 inline-flex items-center">
               <ArrowLeft className="h-3 w-3 mr-1.5" />
-              Retour
+              {t.common.back}
             </Link>
-            <h1 className="text-lg font-light text-foreground tracking-tight">Mon Profil</h1>
+            <h1 className="text-lg font-light text-foreground tracking-tight">{t.dashboard.myProfile}</h1>
             <p className="text-xs text-muted-foreground">
-              Gérez votre carte profil décentralisée
+              {t.dashboard.manageProfile}
             </p>
           </div>
           <ConnectButton />
@@ -130,21 +150,21 @@ export default function DashboardPage() {
         <Card className="bg-card border-border/30">
           <CardHeader className="p-4">
             <div className="flex items-center justify-between mb-1">
-              <CardTitle className="text-sm font-normal text-foreground">Informations du profil</CardTitle>
+              <CardTitle className="text-sm font-normal text-foreground">{t.dashboard.profileInfo}</CardTitle>
               <Link href="/">
                 <Button variant="outline" size="sm">
                   <ArrowLeft className="h-3 w-3 mr-1.5" />
-                  Retour
+                  {t.common.back}
                 </Button>
               </Link>
             </div>
             <CardDescription className="text-xs text-muted-foreground">
-              Votre profil est stocké sur IPFS et lié à votre adresse Ethereum
+              {t.dashboard.profileInfoDescription}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {loading ? (
-              <p className="text-muted-foreground">Chargement...</p>
+              <p className="text-muted-foreground">{t.common.loading}</p>
             ) : (
               <ProfileForm initialData={profile || undefined} />
             )}

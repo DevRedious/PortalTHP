@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { truncateAddress } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n-context";
 import { LogOut } from "lucide-react";
-import { MetaMaskLogo } from "@/components/ui/metamask-logo";
 import { trackWalletConnect } from "@/lib/analytics";
 
 export function ConnectButton() {
@@ -26,16 +25,12 @@ export function ConnectButton() {
     );
   }
 
-  // Filtrer les connecteurs pour éviter les doublons (priorité à MetaMask)
+  // Filtrer MetaMask et éviter les doublons
   const seenNames = new Set<string>();
   const uniqueConnectors = connectors.filter((connector) => {
-    // Si MetaMask existe déjà, ignorer les autres instances
+    // Exclure MetaMask
     if (connector.name === "MetaMask") {
-      if (seenNames.has("MetaMask")) {
-        return false;
-      }
-      seenNames.add("MetaMask");
-      return true;
+      return false;
     }
     // Pour les autres connecteurs, vérifier les doublons par nom
     if (seenNames.has(connector.name)) {
@@ -57,20 +52,13 @@ export function ConnectButton() {
           disabled={isPending}
           size="sm"
         >
-          {connector.name === "MetaMask" ? (
-            <>
-              <MetaMaskLogo className="h-3 w-3 mr-1" />
-              MetaMask
-            </>
-          ) : (
-            <>
-              <svg className="h-3 w-3 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 7V12L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              {t.common.connect}
-            </>
-          )}
+          <>
+            <svg className="h-3 w-3 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M12 7V12L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            {t.common.connect}
+          </>
         </Button>
       ))}
     </div>

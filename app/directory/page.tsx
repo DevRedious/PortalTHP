@@ -16,6 +16,7 @@ import { THP_PROFILE_REGISTRY_ABI, getContractAddress } from "@/lib/contract";
 import { Skeleton } from "@/components/ui/skeleton";
 import { trackSearch } from "@/lib/analytics";
 import { generateDirectorySchema } from "@/lib/seo";
+import { useI18n } from "@/lib/i18n-context";
 
 interface ProfileWithAddress {
   address: string;
@@ -24,6 +25,7 @@ interface ProfileWithAddress {
 }
 
 export default function DirectoryPage() {
+  const { t, locale } = useI18n();
   const [profiles, setProfiles] = useState<ProfileWithAddress[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
@@ -98,7 +100,7 @@ export default function DirectoryPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
       />
       <a href="#main-content" className="skip-link">
-        Aller au contenu principal
+        {t.common.skipToContent}
       </a>
       <div className="container mx-auto px-4 py-8">
         <header 
@@ -106,9 +108,9 @@ export default function DirectoryPage() {
           className="flex justify-between items-center mb-6 border-b border-border/30 pb-3"
         >
           <div>
-            <h1 className="text-lg font-light mb-1 text-foreground tracking-tight">Annuaire</h1>
+            <h1 className="text-lg font-light mb-1 text-foreground tracking-tight">{t.directory.title}</h1>
             <p className="text-xs text-muted-foreground">
-              Découvrez les développeurs de la promo THP
+              {t.directory.subtitle}
             </p>
           </div>
           <ConnectButton />
@@ -116,16 +118,16 @@ export default function DirectoryPage() {
 
         <div className="mb-4">
           <label htmlFor="search-input" className="sr-only">
-            Rechercher dans l&apos;annuaire
+            {t.directory.searchLabel}
           </label>
           <div className="relative max-w-sm">
             <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground/60" aria-hidden="true" />
             <Input
               id="search-input"
-              placeholder="Rechercher..."
+              placeholder={t.common.search}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label="Rechercher dans l'annuaire par nom, département ou technologie"
+              aria-label={t.directory.searchAriaLabel}
               className="pl-8 h-7 text-xs"
             />
           </div>
@@ -138,7 +140,7 @@ export default function DirectoryPage() {
               aria-busy="true"
               aria-live="polite"
               role="status"
-              aria-label="Chargement des profils"
+              aria-label={t.directory.loadingProfiles}
             >
               {[...Array(6)].map((_, i) => (
                 <Card key={i} className="bg-card border-border/30">
@@ -169,12 +171,12 @@ export default function DirectoryPage() {
               <User className="h-12 w-12 mx-auto mb-4 text-muted-foreground" aria-hidden="true" />
               <p className="text-muted-foreground">
                 {searchQuery
-                  ? "Aucun profil ne correspond à votre recherche"
-                  : "Aucun profil disponible pour le moment"}
+                  ? t.directory.noResults
+                  : t.directory.noProfiles}
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label={`${filteredProfiles.length} profil${filteredProfiles.length > 1 ? 's' : ''} trouvé${filteredProfiles.length > 1 ? 's' : ''}`}>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label={`${filteredProfiles.length} ${filteredProfiles.length > 1 ? t.directory.profilesFoundPlural : t.directory.profilesFound}`}>
             {filteredProfiles.map(({ address, profile }) => {
               if (!profile) return null;
 

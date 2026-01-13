@@ -4,7 +4,6 @@ import { ConnectButton } from "@/components/wallet/connect-button";
 import { SiweButton } from "@/components/wallet/siwe-button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { LanguageSelector } from "@/components/ui/language-selector";
 import { useI18n } from "@/lib/i18n-context";
 import Link from "next/link";
 import { ArrowRight, Users, Wallet, Shield } from "lucide-react";
@@ -26,7 +25,6 @@ export default function Home() {
         >
           <h1 className="text-xl font-light text-foreground tracking-tight">{t.home.title}</h1>
           <div className="flex items-center gap-2">
-            <LanguageSelector />
             <ConnectButton />
           </div>
         </header>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useI18n } from "@/lib/i18n-context";
-import { Locale, locales } from "@/lib/i18n";
+import { Locale, locales, localeNames } from "@/lib/i18n";
 import {
   Select,
   SelectContent,
@@ -10,11 +10,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Languages } from "lucide-react";
-
-const languageNames: Record<Locale, string> = {
-  fr: "Français",
-  en: "English",
-};
 
 export function LanguageSelector() {
   const { locale, setLocale } = useI18n();
@@ -30,7 +25,7 @@ export function LanguageSelector() {
       <SelectContent>
         {locales.map((loc) => (
           <SelectItem key={loc} value={loc}>
-            {languageNames[loc]}
+            {localeNames[loc]}
           </SelectItem>
         ))}
       </SelectContent>

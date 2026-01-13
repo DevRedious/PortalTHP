@@ -25,6 +25,7 @@ import { ConfirmationModal } from "./confirmation-modal";
 import { Loader2, Upload } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { trackProfileCreated } from "@/lib/analytics";
+import { useI18n } from "@/lib/i18n-context";
 
 type UploadProgress = {
   stage: "idle" | "avatar" | "profile" | "transaction" | "complete";
@@ -32,6 +33,7 @@ type UploadProgress = {
 };
 
 export function ProfileForm({ initialData }: { initialData?: Profile }) {
+  const { t } = useI18n();
   const { address } = useAccount();
   const chainId = useChainId();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -83,22 +85,22 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
   // Notifications pour les transactions
   useEffect(() => {
     if (writeError) {
-      const errorMessage = writeError.message || "Erreur inconnue";
+      const errorMessage = writeError.message || t.form.errors.unknown;
       
       if (errorMessage.includes("user rejected") || errorMessage.includes("User rejected")) {
-        toast.error("Transaction rejetée", {
-          description: "Vous avez annulé la transaction dans MetaMask.",
+        toast.error(t.form.errors.transactionRejected, {
+          description: t.form.errors.transactionCancelled,
         });
       } else if (errorMessage.includes("insufficient funds") || errorMessage.includes("insufficient balance")) {
-        toast.error("Fonds insuffisants", {
-          description: "Vous n'avez pas assez d'ETH pour payer les frais de transaction.",
+        toast.error(t.form.errors.insufficientFunds, {
+          description: t.form.errors.insufficientFundsDescription,
         });
       } else if (errorMessage.includes("network") || errorMessage.includes("Network")) {
-        toast.error("Erreur réseau", {
-          description: "Problème de connexion au réseau. Vérifiez votre connexion internet.",
+        toast.error(t.form.errors.networkError, {
+          description: t.form.errors.networkErrorDescription,
         });
       } else {
-        toast.error("Erreur de transaction", {
+        toast.error(t.form.errors.transactionError, {
           description: errorMessage,
         });
       }
@@ -109,8 +111,8 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
 
   useEffect(() => {
     if (isPending) {
-      toast.loading("Transaction en attente...", {
-        description: "Veuillez confirmer la transaction dans MetaMask.",
+      toast.loading(t.form.loading.transactionPending, {
+        description: t.form.loading.transactionPendingDescription,
         id: "transaction-pending",
       });
       setUploadProgress({ stage: "transaction", progress: 50 });
@@ -119,7 +121,7 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
 
   useEffect(() => {
     if (isConfirming) {
-      toast.loading("Confirmation de la transaction...", {
+      toast.loading(t.form.loading.transactionConfirming, {
         description: "En attente de la confirmation sur la blockchain.",
         id: "transaction-confirming",
       });
@@ -129,8 +131,8 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
 
   useEffect(() => {
     if (isConfirmed && hash && address) {
-      toast.success("Profil sauvegardé avec succès !", {
-        description: `Transaction confirmée: ${hash.slice(0, 10)}...${hash.slice(-8)}`,
+      toast.success(t.form.success.profileSaved, {
+        description: `${t.form.success.transactionConfirmed}: ${hash.slice(0, 10)}...${hash.slice(-8)}`,
         id: "transaction-success",
       });
       setUploadProgress({ stage: "complete", progress: 100 });
@@ -152,7 +154,7 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
     if (file) {
       // Vérifier la taille du fichier (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        toast.error("Fichier trop volumineux", {
+        toast.error(t.form.errors.fileTooLarge, {
           description: "L'avatar ne doit pas dépasser 5MB.",
         });
         return;
@@ -184,7 +186,7 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
 
   const onSubmit = async (data: Profile) => {
     if (!address) {
-      toast.error("Wallet non connecté", {
+      toast.error(t.form.errors.walletNotConnected, {
         description: "Veuillez connecter votre wallet pour continuer.",
       });
       return;
@@ -205,7 +207,7 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
       // Upload avatar si nouveau
       if (avatarFile) {
         setUploadProgress({ stage: "avatar", progress: 0 });
-        toast.loading("Upload de l'avatar en cours...", {
+        toast.loading(t.form.loading.avatarUpload, {
           description: "Téléchargement sur IPFS via Pinata.",
           id: "avatar-upload",
         });
@@ -213,15 +215,15 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
         try {
           avatarCID = await uploadAvatar(avatarFile);
           setUploadProgress({ stage: "avatar", progress: 100 });
-          toast.success("Avatar uploadé avec succès", {
+          toast.success(t.form.success.avatarUploaded, {
             description: `CID: ${avatarCID.slice(0, 10)}...`,
             id: "avatar-success",
           });
         } catch (error: any) {
-          const errorMessage = error?.message || "Erreur inconnue lors de l'upload";
-          toast.error("Échec de l'upload de l'avatar", {
+          const errorMessage = error?.message || t.form.errors.uploadUnknown;
+          toast.error(t.form.errors.avatarUploadFailed, {
             description: errorMessage.includes("Pinata") 
-              ? "Erreur de connexion à Pinata. Vérifiez votre configuration."
+              ? t.form.errors.pinataError
               : errorMessage,
             id: "avatar-error",
           });
@@ -240,7 +242,7 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
 
       // Upload du profil sur IPFS
       setUploadProgress({ stage: "profile", progress: 0 });
-      toast.loading("Upload du profil en cours...", {
+      toast.loading(t.form.loading.profileUpload, {
         description: "Téléchargement sur IPFS via Pinata.",
         id: "profile-upload",
       });
@@ -249,17 +251,17 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
       try {
         cid = await uploadProfile(profileIPFS);
         setUploadProgress({ stage: "profile", progress: 100 });
-        toast.success("Profil uploadé sur IPFS", {
+        toast.success(t.form.success.profileUploaded, {
           description: `CID: ${cid.slice(0, 10)}...`,
           id: "profile-success",
         });
       } catch (error: any) {
-        const errorMessage = error?.message || "Erreur inconnue lors de l'upload";
-        toast.error("Échec de l'upload du profil", {
+        const errorMessage = error?.message || t.form.errors.uploadUnknown;
+        toast.error(t.form.errors.profileUploadFailed, {
           description: errorMessage.includes("Pinata")
-            ? "Erreur de connexion à Pinata. Vérifiez votre configuration."
+            ? t.form.errors.pinataError
             : errorMessage.includes("network") || errorMessage.includes("Network")
-            ? "Problème de connexion réseau."
+            ? t.form.errors.networkErrorDescription
             : errorMessage,
           id: "profile-error",
         });
@@ -276,8 +278,8 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
         args: [cid, isPublic],
       });
     } catch (error: any) {
-      const errorMessage = error?.message || "Erreur inconnue";
-      toast.error("Erreur lors de la sauvegarde", {
+      const errorMessage = error?.message || t.form.errors.unknown;
+      toast.error(t.form.errors.saveError, {
         description: errorMessage,
       });
       setUploadProgress({ stage: "idle", progress: 0 });
@@ -294,10 +296,10 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
           <div className="space-y-2 p-3 bg-secondary/20 border border-border/30 rounded-md">
             <div className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground">
-                {uploadProgress.stage === "avatar" && "Upload de l'avatar..."}
-                {uploadProgress.stage === "profile" && "Upload du profil..."}
-                {uploadProgress.stage === "transaction" && "Transaction blockchain..."}
-                {uploadProgress.stage === "complete" && "Terminé !"}
+                {uploadProgress.stage === "avatar" && t.form.loading.avatarUpload}
+                {uploadProgress.stage === "profile" && t.form.loading.profileUpload}
+                {uploadProgress.stage === "transaction" && t.form.progress.transaction}
+                {uploadProgress.stage === "complete" && t.common.save}
               </span>
               <span className="text-foreground font-mono">{uploadProgress.progress}%</span>
             </div>
@@ -567,11 +569,11 @@ export function ProfileForm({ initialData }: { initialData?: Profile }) {
           {isProcessing ? (
             <>
               <Loader2 className="h-3 w-3 mr-1.5 animate-spin" aria-hidden="true" />
-              {uploadProgress.stage === "avatar" && "Upload avatar..."}
-              {uploadProgress.stage === "profile" && "Upload profil..."}
-              {uploadProgress.stage === "transaction" && "Transaction..."}
-              {uploadProgress.stage === "complete" && "Terminé !"}
-              {(isPending || isConfirming) && "En attente..."}
+              {uploadProgress.stage === "avatar" && t.form.loading.avatarUpload}
+              {uploadProgress.stage === "profile" && t.form.loading.profileUpload}
+              {uploadProgress.stage === "transaction" && t.form.progress.transactionShort}
+              {uploadProgress.stage === "complete" && t.common.save}
+              {(isPending || isConfirming) && t.form.loading.transactionPending}
             </>
           ) : (
             <>

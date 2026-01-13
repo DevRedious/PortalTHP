@@ -17,8 +17,10 @@ import { THP_PROFILE_REGISTRY_ABI, getContractAddress } from "@/lib/contract";
 import { generateProfileSchema } from "@/lib/seo";
 import { trackProfileView } from "@/lib/analytics";
 import { toast } from "sonner";
+import { useI18n } from "@/lib/i18n-context";
 
 export default function ProfilePage() {
+  const { t, locale } = useI18n();
   const params = useParams();
   const address = params.address as string;
   const [profile, setProfile] = useState<ProfileIPFS | null>(null);
@@ -63,14 +65,14 @@ export default function ProfilePage() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="max-w-md bg-card border-border">
           <CardHeader>
-            <CardTitle className="text-foreground">Adresse invalide</CardTitle>
+            <CardTitle className="text-foreground">{t.profile.invalidAddress}</CardTitle>
             <CardDescription className="text-muted-foreground">
-              L&apos;adresse Ethereum fournie n&apos;est pas valide
+              {t.profile.invalidAddressDescription}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Link href="/directory">
-              <Button>Retour à l&apos;annuaire</Button>
+              <Button>{t.profile.backToDirectory}</Button>
             </Link>
           </CardContent>
         </Card>
@@ -96,7 +98,7 @@ export default function ProfilePage() {
         />
       )}
       <a href="#main-content" className="skip-link">
-        Aller au contenu principal
+        {t.common.skipToContent}
       </a>
       <div className="container mx-auto px-4 py-8">
         <header 
@@ -108,7 +110,7 @@ export default function ProfilePage() {
             className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center"
           >
             <ArrowLeft className="h-3 w-3 mr-1.5" />
-            Retour à l&apos;annuaire
+            {t.profile.backToDirectory}
           </Link>
           <ConnectButton />
         </header>
@@ -121,23 +123,23 @@ export default function ProfilePage() {
               aria-live="polite"
               role="status"
             >
-              <p className="text-muted-foreground">Chargement du profil...</p>
+              <p className="text-muted-foreground">{t.profile.loadingProfile}</p>
             </div>
           ) : !profile ? (
           <Card className="max-w-2xl mx-auto bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-foreground">Profil non trouvé</CardTitle>
-              <CardDescription className="text-muted-foreground">
-                Aucun profil n&apos;a été trouvé pour cette adresse
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Adresse: {truncateAddress(address)}
-              </p>
-              <Link href="/directory">
-                <Button>Retour à l&apos;annuaire</Button>
-              </Link>
+            <CardTitle className="text-foreground">{t.profile.profileNotFound}</CardTitle>
+            <CardDescription className="text-muted-foreground">
+              {t.profile.noProfileFound}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              {t.common.address}: {truncateAddress(address)}
+            </p>
+            <Link href="/directory">
+              <Button>{t.profile.backToDirectory}</Button>
+            </Link>
             </CardContent>
           </Card>
         ) : (
@@ -157,7 +159,7 @@ export default function ProfilePage() {
                   </CardTitle>
                   <CardDescription className="text-xs mb-3 text-muted-foreground">
                     {profile.department}
-                    {profile.age && ` • ${profile.age} ans`}
+                    {profile.age && ` • ${profile.age} ${t.common.years}`}
                   </CardDescription>
                   <div className="flex gap-1.5">
                     {profile.github && (
@@ -193,13 +195,13 @@ export default function ProfilePage() {
                           try {
                             await navigator.clipboard.writeText(profile.discord);
                             setDiscordCopied(true);
-                            toast.success("Discord copié !", {
-                              description: `${profile.discord} a été copié dans le presse-papier`,
+                            toast.success(t.profile.discordCopied, {
+                              description: `${profile.discord} ${t.profile.discordCopiedDescription}`,
                             });
                             setTimeout(() => setDiscordCopied(false), 2000);
                           } catch (error) {
-                            toast.error("Erreur", {
-                              description: "Impossible de copier le texte Discord",
+                            toast.error(t.profile.error, {
+                              description: t.profile.discordCopyError,
                             });
                           }
                         }}
@@ -208,7 +210,7 @@ export default function ProfilePage() {
                         {discordCopied ? (
                           <>
                             <Check className="h-3 w-3 mr-1" />
-                            Copié !
+                            {t.common.copied}
                           </>
                         ) : (
                           <>
@@ -224,13 +226,13 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent className="p-4 pt-0 space-y-4">
               <div>
-                <h3 className="text-xs font-normal mb-1.5 text-foreground">À propos</h3>
+                <h3 className="text-xs font-normal mb-1.5 text-foreground">{t.profile.about}</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">{profile.bio}</p>
               </div>
 
               {profile.stackTags.length > 0 && (
                 <div>
-                  <h3 className="text-xs font-normal mb-1.5 text-foreground">Stack technique</h3>
+                  <h3 className="text-xs font-normal mb-1.5 text-foreground">{t.profile.techStack}</h3>
                   <div className="flex flex-wrap gap-1.5">
                     {profile.stackTags.map((tag) => (
                       <span
@@ -245,7 +247,7 @@ export default function ProfilePage() {
               )}
 
               <div>
-                <h3 className="text-xs font-normal mb-1.5 text-foreground">Disponibilité</h3>
+                <h3 className="text-xs font-normal mb-1.5 text-foreground">{t.profile.availability}</h3>
                 <span
                   className={`px-2 py-0.5 rounded text-xs border ${
                     profile.availability === "available"
@@ -256,20 +258,20 @@ export default function ProfilePage() {
                   }`}
                 >
                   {profile.availability === "available"
-                    ? "Disponible"
+                    ? t.profile.available
                     : profile.availability === "busy"
-                    ? "Occupé"
-                    : "Indisponible"}
+                    ? t.profile.busy
+                    : t.profile.unavailable}
                 </span>
               </div>
 
               <div className="pt-3 border-t border-border/30">
                 <p className="text-xs text-muted-foreground/60">
-                  Adresse Ethereum: {truncateAddress(address)}
+                  {t.profile.ethereumAddress}: {truncateAddress(address)}
                 </p>
                 {profile.updatedAt && (
                   <p className="text-xs text-muted-foreground/60">
-                    Dernière mise à jour: {formatDate(new Date(profile.updatedAt))}
+                    {t.profile.lastUpdate}: {formatDate(new Date(profile.updatedAt))}
                   </p>
                 )}
               </div>

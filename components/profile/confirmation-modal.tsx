@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Loader2, AlertCircle } from "lucide-react";
+import { useI18n } from "@/lib/i18n-context";
 
 interface ConfirmationModalProps {
   open: boolean;
@@ -30,6 +31,7 @@ export function ConfirmationModal({
   isEstimating,
   isPending,
 }: ConfirmationModalProps) {
+  const { t } = useI18n();
   const estimatedCost = estimatedGas && gasPrice 
     ? (estimatedGas * gasPrice) / BigInt(10 ** 18)
     : null;
@@ -40,38 +42,38 @@ export function ConfirmationModal({
         <DialogHeader>
           <DialogTitle className="text-sm font-normal text-foreground flex items-center gap-2">
             <AlertCircle className="h-4 w-4 text-yellow-500" aria-hidden="true" />
-            Confirmer la sauvegarde du profil
+            {t.modal.confirmSave.title}
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            Cette action va créer une transaction sur la blockchain Ethereum.
+            {t.modal.confirmSave.description}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-3 py-2">
           <div className="text-xs text-muted-foreground space-y-1.5">
-            <p>Vous allez :</p>
+            <p>{t.modal.confirmSave.youWill}</p>
             <ul className="list-disc list-inside space-y-0.5 ml-2">
-              <li>Uploader votre profil sur IPFS (décentralisé)</li>
-              <li>Enregistrer l&apos;URI sur la blockchain</li>
-              <li>Payer les frais de transaction (gas)</li>
+              <li>{t.modal.confirmSave.uploadIPFS}</li>
+              <li>{t.modal.confirmSave.saveURI}</li>
+              <li>{t.modal.confirmSave.payGas}</li>
             </ul>
           </div>
 
           {isEstimating ? (
             <div className="flex items-center gap-2 text-xs text-muted-foreground py-2">
               <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
-              <span>Estimation du coût en cours...</span>
+              <span>{t.modal.confirmSave.estimating}</span>
             </div>
           ) : estimatedGas && estimatedCost ? (
             <div className="bg-secondary/30 border border-border/30 rounded-md p-3 space-y-1">
               <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Gas estimé :</span>
+                <span className="text-muted-foreground">{t.modal.confirmSave.estimatedGas}</span>
                 <span className="text-foreground font-mono">
                   {estimatedGas.toString()} units
                 </span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Coût estimé :</span>
+                <span className="text-muted-foreground">{t.modal.confirmSave.estimatedCost}</span>
                 <span className="text-foreground font-mono">
                   ~{estimatedCost.toString()} ETH
                 </span>
@@ -79,7 +81,7 @@ export function ConfirmationModal({
             </div>
           ) : (
             <div className="text-xs text-muted-foreground py-2">
-              L&apos;estimation du coût n&apos;est pas disponible.
+              {t.modal.confirmSave.estimationUnavailable}
             </div>
           )}
         </div>
@@ -93,7 +95,7 @@ export function ConfirmationModal({
             size="sm"
             className="text-xs"
           >
-            Annuler
+            {t.common.cancel}
           </Button>
           <Button
             type="button"
@@ -105,10 +107,10 @@ export function ConfirmationModal({
             {isPending ? (
               <>
                 <Loader2 className="h-3 w-3 mr-1.5 animate-spin" aria-hidden="true" />
-                Confirmation...
+                {t.modal.confirmSave.confirming}
               </>
             ) : (
-              "Confirmer"
+              t.modal.confirmSave.confirm
             )}
           </Button>
         </DialogFooter>
