@@ -78,12 +78,12 @@ export function Filters({
       {/* Filtres et tri */}
       <div className="flex flex-wrap gap-2 items-center">
         {/* Filtre département */}
-        <Select value={filters.department} onValueChange={(value) => updateFilter("department", value)}>
+        <Select value={filters.department || "all"} onValueChange={(value) => updateFilter("department", value === "all" ? "" : value)}>
           <SelectTrigger className="w-[140px] h-7 text-xs">
             <SelectValue placeholder={t.directory.filterDepartment || "Département"} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">{t.directory.allDepartments || "Tous"}</SelectItem>
+            <SelectItem value="all">{t.directory.allDepartments || "Tous"}</SelectItem>
             {availableDepartments.map((dept) => (
               <SelectItem key={dept} value={dept}>
                 {dept}
@@ -93,12 +93,12 @@ export function Filters({
         </Select>
 
         {/* Filtre disponibilité */}
-        <Select value={filters.availability} onValueChange={(value) => updateFilter("availability", value)}>
+        <Select value={filters.availability || "all"} onValueChange={(value) => updateFilter("availability", value === "all" ? "" : value)}>
           <SelectTrigger className="w-[140px] h-7 text-xs">
             <SelectValue placeholder={t.directory.filterAvailability || "Disponibilité"} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">{t.directory.allAvailability || "Tous"}</SelectItem>
+            <SelectItem value="all">{t.directory.allAvailability || "Tous"}</SelectItem>
             <SelectItem value="available">{t.profile.available}</SelectItem>
             <SelectItem value="busy">{t.profile.busy}</SelectItem>
             <SelectItem value="unavailable">{t.profile.unavailable}</SelectItem>
@@ -106,12 +106,12 @@ export function Filters({
         </Select>
 
         {/* Filtre stack */}
-        <Select value={filters.stackTag} onValueChange={(value) => updateFilter("stackTag", value)}>
+        <Select value={filters.stackTag || "all"} onValueChange={(value) => updateFilter("stackTag", value === "all" ? "" : value)}>
           <SelectTrigger className="w-[140px] h-7 text-xs">
             <SelectValue placeholder={t.directory.filterStack || "Stack"} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">{t.directory.allStack || "Tous"}</SelectItem>
+            <SelectItem value="all">{t.directory.allStack || "Tous"}</SelectItem>
             {availableStackTags.map((tag) => (
               <SelectItem key={tag} value={tag}>
                 {tag}

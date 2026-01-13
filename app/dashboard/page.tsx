@@ -22,6 +22,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   const { data: profileData } = useReadContract({
     address: getContractAddress(),
@@ -34,15 +35,11 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    // Vérifier l'authentification SIWE
-    if (typeof window !== "undefined" && address) {
-      const auth = localStorage.getItem(`siwe_${address}`);
-      if (!auth) {
-        // Rediriger vers la page d'accueil si non authentifié
-        router.push("/");
-      }
+    // Vérifier l'authentification SIWE après le premier rendu
+    if (typeof window !== "undefined") {
+      setIsCheckingAuth(false);
     }
-  }, [address, router]);
+  }, []);
 
   useEffect(() => {
     async function loadProfile() {
@@ -61,6 +58,15 @@ export default function DashboardPage() {
 
     loadProfile();
   }, [address, profileData]);
+
+  // Attendre que la vérification d'authentification soit terminée
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">{t.common.loading}</p>
+      </div>
+    );
+  }
 
   if (!isConnected) {
     return (
