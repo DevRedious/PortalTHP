@@ -13,8 +13,11 @@ doc/
 ├── 05-project/             # Gestion du projet
 ├── archive/                # Archives (anciennes versions)
 ├── INDEX.md                # Ce fichier
-└── README.md               # Index principal
+├── README.md               # Index principal
+└── STRUCTURE.md            # Explication de l'organisation
 ```
+
+📖 Pour comprendre l'organisation, consultez [STRUCTURE.md](./STRUCTURE.md)
 
 ## Par ordre alphabétique
 
@@ -39,6 +42,7 @@ doc/
 | [**SECURITE.md**](./04-deployment/SECURITE.md) | Sécurité et bonnes pratiques | Déploiement | `04-deployment/` |
 | [**SETUP_COMPLET.md**](./01-getting-started/SETUP_COMPLET.md) | Guide de configuration depuis zéro | Démarrage | `01-getting-started/` |
 | [**VERCEL_BUILD_FIXES.md**](./02-development/VERCEL_BUILD_FIXES.md) | Corrections build Vercel | Développement | `02-development/` |
+| [**STRUCTURE.md**](./STRUCTURE.md) | Explication de l'organisation de la documentation | Index | Racine |
 
 ## Par catégorie
 
