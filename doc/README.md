@@ -28,46 +28,44 @@ Le **Portail THP** est une application Web3 décentralisée permettant aux déve
 
 ## 📖 Table des matières
 
-### 🚀 Démarrage rapide
+### 🚀 Démarrage rapide (`01-getting-started/`)
 
 | Document | Description |
 |----------|-------------|
-| [**Installation**](./INSTALLATION.md) | Guide d'installation pas à pas |
-| [**Setup Complet**](./SETUP_COMPLET.md) | Guide de configuration depuis zéro |
-| [**Configuration**](./CONFIGURATION.md) | Configuration complète de l'application |
+| [**Setup Complet**](./01-getting-started/SETUP_COMPLET.md) | Guide de configuration depuis zéro |
+| [**Configuration**](./01-getting-started/CONFIGURATION.md) | Configuration complète de l'application |
 
-### 🏗️ Architecture et développement
-
-| Document | Description |
-|----------|-------------|
-| [**Architecture**](./ARCHITECTURE.md) | Architecture système et flux de données |
-| [**Développement**](./DEVELOPPEMENT.md) | Guide de développement et contribution |
-| [**Composants**](./COMPOSANTS.md) | Documentation des composants UI |
-
-### 🔧 Référence technique
+### 🏗️ Architecture et développement (`02-development/`)
 
 | Document | Description |
 |----------|-------------|
-| [**API et Contrats**](./API.md) | Documentation API et smart contracts |
-| [**Internationalisation**](./INTERNATIONALISATION.md) | Système de traduction i18n |
+| [**Architecture**](./02-development/ARCHITECTURE.md) | Architecture système et flux de données |
+| [**Composants**](./02-development/COMPOSANTS.md) | Documentation des composants UI |
+| [**Brave Browser Fix**](./02-development/BRAVE_BROWSER_FIX.md) | Correction duplication boutons Brave |
+| [**Améliorations**](./02-development/AMELIORATIONS.md) | Liste des améliorations |
 
-### 🚢 Déploiement et maintenance
-
-| Document | Description |
-|----------|-------------|
-| [**Déploiement**](./DEPLOIEMENT.md) | Guide de déploiement |
-| [**Sécurité**](./SECURITE.md) | Sécurité et bonnes pratiques |
-
-### 📋 Documentation projet
+### 🔧 Référence technique (`03-reference/`)
 
 | Document | Description |
 |----------|-------------|
-| [**Licence**](./LICENCE.md) | Documentation de la licence MIT |
-| [**Gitignore**](./GITIGNORE.md) | Documentation du fichier .gitignore |
-| [**GitHub**](./GITHUB.md) | Guide pour gérer le dépôt GitHub |
-| [**Commandes GitHub**](./COMMANDES_GITHUB.md) | Commandes Git pour pousser sur GitHub |
-| [**Préparation GitHub**](./PREPARATION_GITHUB.md) | Checklist avant de pousser sur GitHub |
-| [**Guide README**](./README_GUIDE.md) | Guide pour maintenir le README |
+| [**Internationalisation**](./03-reference/INTERNATIONALISATION.md) | Système de traduction i18n |
+
+### 🚢 Déploiement et maintenance (`04-deployment/`)
+
+| Document | Description |
+|----------|-------------|
+| [**Sécurité**](./04-deployment/SECURITE.md) | Sécurité et bonnes pratiques |
+
+### 📋 Documentation projet (`05-project/`)
+
+| Document | Description |
+|----------|-------------|
+| [**Licence**](./05-project/LICENCE.md) | Documentation de la licence MIT |
+| [**Gitignore**](./05-project/GITIGNORE.md) | Documentation du fichier .gitignore |
+| [**GitHub**](./05-project/GITHUB.md) | Guide pour gérer le dépôt GitHub |
+| [**Commandes GitHub**](./05-project/COMMANDES_GITHUB.md) | Commandes Git pour pousser sur GitHub |
+| [**Préparation GitHub**](./05-project/PREPARATION_GITHUB.md) | Checklist avant de pousser sur GitHub |
+| [**Guide README**](./05-project/README_GUIDE.md) | Guide pour maintenir le README |
 
 ---
 
@@ -75,23 +73,20 @@ Le **Portail THP** est une application Web3 décentralisée permettant aux déve
 
 ### Pour les nouveaux développeurs
 
-1. 📖 Lire [Installation](./INSTALLATION.md)
-2. ⚙️ Suivre [Setup Complet](./SETUP_COMPLET.md)
-3. 🏗️ Comprendre [Architecture](./ARCHITECTURE.md)
-4. 💻 Consulter [Développement](./DEVELOPPEMENT.md)
+1. ⚙️ Suivre [Setup Complet](./01-getting-started/SETUP_COMPLET.md)
+2. 🏗️ Comprendre [Architecture](./02-development/ARCHITECTURE.md)
+3. 🧩 Étudier [Composants](./02-development/COMPOSANTS.md)
 
 ### Pour les contributeurs
 
-1. 📚 Lire [Développement](./DEVELOPPEMENT.md)
-2. 🧩 Étudier [Composants](./COMPOSANTS.md)
-3. 🔌 Consulter [API et Contrats](./API.md)
-4. 🌐 Voir [Internationalisation](./INTERNATIONALISATION.md)
+1. 🧩 Étudier [Composants](./02-development/COMPOSANTS.md)
+2. 🏗️ Comprendre [Architecture](./02-development/ARCHITECTURE.md)
+3. 🌐 Voir [Internationalisation](./03-reference/INTERNATIONALISATION.md)
 
 ### Pour le déploiement
 
-1. 🚢 Suivre [Déploiement](./DEPLOIEMENT.md)
-2. 🔒 Lire [Sécurité](./SECURITE.md)
-3. ⚙️ Vérifier [Configuration](./CONFIGURATION.md)
+1. 🔒 Lire [Sécurité](./04-deployment/SECURITE.md)
+2. ⚙️ Vérifier [Configuration](./01-getting-started/CONFIGURATION.md)
 
 ---
 
@@ -101,15 +96,13 @@ Le **Portail THP** est une application Web3 décentralisée permettant aux déve
 
 ### Par sujet
 
-- **Installation** : [INSTALLATION.md](./INSTALLATION.md), [SETUP_COMPLET.md](./SETUP_COMPLET.md)
-- **Configuration** : [CONFIGURATION.md](./CONFIGURATION.md)
-- **Architecture** : [ARCHITECTURE.md](./ARCHITECTURE.md)
-- **Développement** : [DEVELOPPEMENT.md](./DEVELOPPEMENT.md), [COMPOSANTS.md](./COMPOSANTS.md)
-- **Web3** : [API.md](./API.md)
-- **i18n** : [INTERNATIONALISATION.md](./INTERNATIONALISATION.md)
-- **Déploiement** : [DEPLOIEMENT.md](./DEPLOIEMENT.md)
-- **Sécurité** : [SECURITE.md](./SECURITE.md)
-- **Git/GitHub** : [GITHUB.md](./GITHUB.md), [COMMANDES_GITHUB.md](./COMMANDES_GITHUB.md)
+- **Installation/Setup** : [SETUP_COMPLET.md](./01-getting-started/SETUP_COMPLET.md)
+- **Configuration** : [CONFIGURATION.md](./01-getting-started/CONFIGURATION.md)
+- **Architecture** : [ARCHITECTURE.md](./02-development/ARCHITECTURE.md)
+- **Développement** : [COMPOSANTS.md](./02-development/COMPOSANTS.md), [AMELIORATIONS.md](./02-development/AMELIORATIONS.md)
+- **i18n** : [INTERNATIONALISATION.md](./03-reference/INTERNATIONALISATION.md)
+- **Sécurité** : [SECURITE.md](./04-deployment/SECURITE.md)
+- **Git/GitHub** : [GITHUB.md](./05-project/GITHUB.md), [COMMANDES_GITHUB.md](./05-project/COMMANDES_GITHUB.md)
 
 ### Par type de document
 
@@ -124,32 +117,38 @@ Le **Portail THP** est une application Web3 décentralisée permettant aux déve
 ```
 doc/
 ├── README.md                    # Ce fichier - Index principal
+├── INDEX.md                     # Index alphabétique complet
 │
-├── 🚀 Démarrage
-│   ├── INSTALLATION.md          # Guide d'installation
+├── 01-getting-started/          # 🚀 Guides de démarrage
 │   ├── SETUP_COMPLET.md         # Setup depuis zéro
 │   └── CONFIGURATION.md         # Configuration complète
 │
-├── 🏗️ Architecture & Développement
+├── 02-development/              # 🏗️ Architecture & Développement
 │   ├── ARCHITECTURE.md          # Architecture système
-│   ├── DEVELOPPEMENT.md         # Guide de développement
-│   └── COMPOSANTS.md            # Documentation composants
+│   ├── COMPOSANTS.md            # Documentation composants
+│   ├── BRAVE_BROWSER_FIX.md     # Correction duplication boutons Brave
+│   ├── BUTTONS_ANALYSIS.md      # Analyse des boutons
+│   ├── I18N_AUDIT.md            # Audit i18n
+│   ├── LIT_VERSION_FIX.md       # Correction version Lit
+│   ├── VERCEL_BUILD_FIXES.md    # Corrections build Vercel
+│   └── AMELIORATIONS.md         # Liste des améliorations
 │
-├── 🔧 Référence
-│   ├── API.md                   # API et smart contracts
+├── 03-reference/                # 🔧 Référence technique
 │   └── INTERNATIONALISATION.md  # Système i18n
 │
-├── 🚢 Déploiement
-│   ├── DEPLOIEMENT.md           # Guide de déploiement
+├── 04-deployment/               # 🚢 Déploiement
 │   └── SECURITE.md              # Sécurité
 │
-└── 📋 Projet
-    ├── LICENCE.md               # Licence MIT
-    ├── GITIGNORE.md             # Documentation .gitignore
-    ├── GITHUB.md                # Guide GitHub
-    ├── COMMANDES_GITHUB.md      # Commandes Git
-    ├── PREPARATION_GITHUB.md    # Checklist GitHub
-    └── README_GUIDE.md          # Guide README
+├── 05-project/                  # 📋 Gestion du projet
+│   ├── LICENCE.md               # Licence MIT
+│   ├── GITIGNORE.md             # Documentation .gitignore
+│   ├── GITHUB.md                # Guide GitHub
+│   ├── COMMANDES_GITHUB.md      # Commandes Git
+│   ├── PREPARATION_GITHUB.md    # Checklist GitHub
+│   └── README_GUIDE.md          # Guide README
+│
+└── archive/                     # 📦 Archives
+    └── (anciennes versions)
 ```
 
 ---
@@ -166,7 +165,7 @@ Pour toute question ou problème :
 
 ## 📄 Licence
 
-MIT - Voir [LICENCE.md](./LICENCE.md) pour plus d'informations.
+MIT - Voir [LICENCE.md](./05-project/LICENCE.md) pour plus d'informations.
 
 ---
 

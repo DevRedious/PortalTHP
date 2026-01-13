@@ -1,85 +1,113 @@
 # 📑 Index rapide - Documentation Portail THP
 
-Index alphabétique de tous les documents de la documentation.
+Index alphabétique de tous les documents de la documentation organisés par catégories.
+
+## Structure de la documentation
+
+```
+doc/
+├── 01-getting-started/     # Guides de démarrage
+├── 02-development/         # Guides de développement
+├── 03-reference/           # Documentation de référence
+├── 04-deployment/          # Guides de déploiement
+├── 05-project/             # Gestion du projet
+├── archive/                # Archives (anciennes versions)
+├── INDEX.md                # Ce fichier
+└── README.md               # Index principal
+```
 
 ## Par ordre alphabétique
 
-| Document | Description | Catégorie |
-|----------|-------------|-----------|
-| [**API.md**](./API.md) | Documentation API et smart contracts | Référence |
-| [**ARCHITECTURE.md**](./ARCHITECTURE.md) | Architecture système et flux de données | Architecture |
-| [**BRAVE_BROWSER_FIX.md**](./BRAVE_BROWSER_FIX.md) | Correction duplication boutons dans Brave | Développement |
-| [**COMMANDES_GITHUB.md**](./COMMANDES_GITHUB.md) | Commandes Git pour pousser sur GitHub | Projet |
-| [**COMPOSANTS.md**](./COMPOSANTS.md) | Documentation des composants UI | Développement |
-| [**CONFIGURATION.md**](./CONFIGURATION.md) | Configuration complète de l'application | Configuration |
-| [**DEPLOIEMENT.md**](./DEPLOIEMENT.md) | Guide de déploiement | Déploiement |
-| [**DEVELOPPEMENT.md**](./DEVELOPPEMENT.md) | Guide de développement et contribution | Développement |
-| [**GITHUB.md**](./GITHUB.md) | Guide pour gérer le dépôt GitHub | Projet |
-| [**GITIGNORE.md**](./GITIGNORE.md) | Documentation du fichier .gitignore | Projet |
-| [**INSTALLATION.md**](./INSTALLATION.md) | Guide d'installation pas à pas | Démarrage |
-| [**INTERNATIONALISATION.md**](./INTERNATIONALISATION.md) | Système de traduction i18n | Référence |
-| [**LICENCE.md**](./LICENCE.md) | Documentation de la licence MIT | Projet |
-| [**PREPARATION_GITHUB.md**](./PREPARATION_GITHUB.md) | Checklist avant de pousser sur GitHub | Projet |
-| [**README.md**](./README.md) | Index principal de la documentation | Index |
-| [**README_GUIDE.md**](./README_GUIDE.md) | Guide pour maintenir le README | Projet |
-| [**SECURITE.md**](./SECURITE.md) | Sécurité et bonnes pratiques | Déploiement |
-| [**SETUP_COMPLET.md**](./SETUP_COMPLET.md) | Guide de configuration depuis zéro | Démarrage |
+| Document | Description | Catégorie | Chemin |
+|----------|-------------|-----------|--------|
+| [**AMELIORATIONS.md**](./02-development/AMELIORATIONS.md) | Liste des améliorations | Développement | `02-development/` |
+| [**ARCHITECTURE.md**](./02-development/ARCHITECTURE.md) | Architecture système et flux de données | Architecture | `02-development/` |
+| [**BRAVE_BROWSER_FIX.md**](./02-development/BRAVE_BROWSER_FIX.md) | Correction duplication boutons dans Brave | Développement | `02-development/` |
+| [**BUTTONS_ANALYSIS.md**](./02-development/BUTTONS_ANALYSIS.md) | Analyse des boutons | Développement | `02-development/` |
+| [**COMMANDES_GITHUB.md**](./05-project/COMMANDES_GITHUB.md) | Commandes Git pour pousser sur GitHub | Projet | `05-project/` |
+| [**COMPOSANTS.md**](./02-development/COMPOSANTS.md) | Documentation des composants UI | Développement | `02-development/` |
+| [**CONFIGURATION.md**](./01-getting-started/CONFIGURATION.md) | Configuration complète de l'application | Configuration | `01-getting-started/` |
+| [**GITHUB.md**](./05-project/GITHUB.md) | Guide pour gérer le dépôt GitHub | Projet | `05-project/` |
+| [**GITIGNORE.md**](./05-project/GITIGNORE.md) | Documentation du fichier .gitignore | Projet | `05-project/` |
+| [**I18N_AUDIT.md**](./02-development/I18N_AUDIT.md) | Audit du système i18n | Développement | `02-development/` |
+| [**INTERNATIONALISATION.md**](./03-reference/INTERNATIONALISATION.md) | Système de traduction i18n | Référence | `03-reference/` |
+| [**LICENCE.md**](./05-project/LICENCE.md) | Documentation de la licence MIT | Projet | `05-project/` |
+| [**LIT_VERSION_FIX.md**](./02-development/LIT_VERSION_FIX.md) | Correction version Lit | Développement | `02-development/` |
+| [**PREPARATION_GITHUB.md**](./05-project/PREPARATION_GITHUB.md) | Checklist avant de pousser sur GitHub | Projet | `05-project/` |
+| [**README.md**](./README.md) | Index principal de la documentation | Index | Racine |
+| [**README_GUIDE.md**](./05-project/README_GUIDE.md) | Guide pour maintenir le README | Projet | `05-project/` |
+| [**SECURITE.md**](./04-deployment/SECURITE.md) | Sécurité et bonnes pratiques | Déploiement | `04-deployment/` |
+| [**SETUP_COMPLET.md**](./01-getting-started/SETUP_COMPLET.md) | Guide de configuration depuis zéro | Démarrage | `01-getting-started/` |
+| [**VERCEL_BUILD_FIXES.md**](./02-development/VERCEL_BUILD_FIXES.md) | Corrections build Vercel | Développement | `02-development/` |
 
 ## Par catégorie
 
-### 🚀 Démarrage
-- [INSTALLATION.md](./INSTALLATION.md) - Guide d'installation
-- [SETUP_COMPLET.md](./SETUP_COMPLET.md) - Setup depuis zéro
-- [CONFIGURATION.md](./CONFIGURATION.md) - Configuration
+### 🚀 01 - Démarrage (`01-getting-started/`)
+Guides pour commencer avec le projet.
 
-### 🏗️ Architecture & Développement
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Architecture système
-- [DEVELOPPEMENT.md](./DEVELOPPEMENT.md) - Guide de développement
-- [COMPOSANTS.md](./COMPOSANTS.md) - Documentation composants
-- [BRAVE_BROWSER_FIX.md](./BRAVE_BROWSER_FIX.md) - Correction duplication boutons Brave
+- [SETUP_COMPLET.md](./01-getting-started/SETUP_COMPLET.md) - Setup depuis zéro
+- [CONFIGURATION.md](./01-getting-started/CONFIGURATION.md) - Configuration
 
-### 🔧 Référence
-- [API.md](./API.md) - API et smart contracts
-- [INTERNATIONALISATION.md](./INTERNATIONALISATION.md) - Système i18n
+### 🏗️ 02 - Architecture & Développement (`02-development/`)
+Documentation technique et guides de développement.
 
-### 🚢 Déploiement
-- [DEPLOIEMENT.md](./DEPLOIEMENT.md) - Guide de déploiement
-- [SECURITE.md](./SECURITE.md) - Sécurité
+- [ARCHITECTURE.md](./02-development/ARCHITECTURE.md) - Architecture système
+- [COMPOSANTS.md](./02-development/COMPOSANTS.md) - Documentation composants
+- [BRAVE_BROWSER_FIX.md](./02-development/BRAVE_BROWSER_FIX.md) - Correction duplication boutons Brave
+- [BUTTONS_ANALYSIS.md](./02-development/BUTTONS_ANALYSIS.md) - Analyse des boutons
+- [I18N_AUDIT.md](./02-development/I18N_AUDIT.md) - Audit i18n
+- [LIT_VERSION_FIX.md](./02-development/LIT_VERSION_FIX.md) - Correction version Lit
+- [VERCEL_BUILD_FIXES.md](./02-development/VERCEL_BUILD_FIXES.md) - Corrections build Vercel
+- [AMELIORATIONS.md](./02-development/AMELIORATIONS.md) - Liste des améliorations
 
-### 📋 Projet
-- [LICENCE.md](./LICENCE.md) - Licence MIT
-- [GITIGNORE.md](./GITIGNORE.md) - Documentation .gitignore
-- [GITHUB.md](./GITHUB.md) - Guide GitHub
-- [COMMANDES_GITHUB.md](./COMMANDES_GITHUB.md) - Commandes Git
-- [PREPARATION_GITHUB.md](./PREPARATION_GITHUB.md) - Checklist GitHub
-- [README_GUIDE.md](./README_GUIDE.md) - Guide README
+### 🔧 03 - Référence (`03-reference/`)
+Documentation de référence pour les APIs et systèmes.
+
+- [INTERNATIONALISATION.md](./03-reference/INTERNATIONALISATION.md) - Système i18n
+
+### 🚢 04 - Déploiement (`04-deployment/`)
+Guides pour déployer l'application.
+
+- [SECURITE.md](./04-deployment/SECURITE.md) - Sécurité
+
+### 📋 05 - Projet (`05-project/`)
+Gestion du projet, Git, GitHub et licence.
+
+- [LICENCE.md](./05-project/LICENCE.md) - Licence MIT
+- [GITIGNORE.md](./05-project/GITIGNORE.md) - Documentation .gitignore
+- [GITHUB.md](./05-project/GITHUB.md) - Guide GitHub
+- [COMMANDES_GITHUB.md](./05-project/COMMANDES_GITHUB.md) - Commandes Git
+- [PREPARATION_GITHUB.md](./05-project/PREPARATION_GITHUB.md) - Checklist GitHub
+- [README_GUIDE.md](./05-project/README_GUIDE.md) - Guide README
+
+### 📦 Archive (`archive/`)
+Anciennes versions et documents archivés.
+
+- Voir le dossier [archive/](./archive/) pour les documents archivés
 
 ## Par cas d'usage
 
 ### Je veux installer le projet
-1. [INSTALLATION.md](./INSTALLATION.md)
-2. [SETUP_COMPLET.md](./SETUP_COMPLET.md)
-3. [CONFIGURATION.md](./CONFIGURATION.md)
+1. [SETUP_COMPLET.md](./01-getting-started/SETUP_COMPLET.md)
+2. [CONFIGURATION.md](./01-getting-started/CONFIGURATION.md)
 
 ### Je veux comprendre l'architecture
-1. [ARCHITECTURE.md](./ARCHITECTURE.md)
-2. [COMPOSANTS.md](./COMPOSANTS.md)
-3. [API.md](./API.md)
+1. [ARCHITECTURE.md](./02-development/ARCHITECTURE.md)
+2. [COMPOSANTS.md](./02-development/COMPOSANTS.md)
 
 ### Je veux contribuer au code
-1. [DEVELOPPEMENT.md](./DEVELOPPEMENT.md)
-2. [COMPOSANTS.md](./COMPOSANTS.md)
-3. [INTERNATIONALISATION.md](./INTERNATIONALISATION.md)
+1. [COMPOSANTS.md](./02-development/COMPOSANTS.md)
+2. [ARCHITECTURE.md](./02-development/ARCHITECTURE.md)
+3. [INTERNATIONALISATION.md](./03-reference/INTERNATIONALISATION.md)
 
 ### Je veux déployer
-1. [DEPLOIEMENT.md](./DEPLOIEMENT.md)
-2. [SECURITE.md](./SECURITE.md)
-3. [CONFIGURATION.md](./CONFIGURATION.md)
+1. [SECURITE.md](./04-deployment/SECURITE.md)
+2. [CONFIGURATION.md](./01-getting-started/CONFIGURATION.md)
 
 ### Je veux gérer GitHub
-1. [GITHUB.md](./GITHUB.md)
-2. [COMMANDES_GITHUB.md](./COMMANDES_GITHUB.md)
-3. [PREPARATION_GITHUB.md](./PREPARATION_GITHUB.md)
+1. [GITHUB.md](./05-project/GITHUB.md)
+2. [COMMANDES_GITHUB.md](./05-project/COMMANDES_GITHUB.md)
+3. [PREPARATION_GITHUB.md](./05-project/PREPARATION_GITHUB.md)
 
 ---
 
